@@ -15,7 +15,7 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop"
+            dbCreate = ""
             url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
@@ -32,7 +32,7 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "create-drop"
+            dbCreate = ""
             url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
@@ -49,7 +49,7 @@ environments {
     }
     production {
         dataSource {
-            dbCreate = "create-drop"
+            dbCreate = ""
             url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
