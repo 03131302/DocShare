@@ -3,6 +3,8 @@ package com.ocse.doc.domain
 class InfoLog {
 
     static constraints = {
+        ip nullable: false
+        type nullable: false
     }
 
     static belongsTo = [infoData: InfoData, user: AdminUser]

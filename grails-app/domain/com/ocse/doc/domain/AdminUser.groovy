@@ -6,6 +6,7 @@ class AdminUser {
         userName nullable: false
         userCode nullable: false
         passWord nullable: false
+        text nullable: true
     }
 
     static belongsTo = [org: Organization]
@@ -64,14 +65,6 @@ class AdminUser {
 
     void setPassWord(String passWord) {
         this.passWord = passWord
-    }
-
-    Organization getOrg() {
-        return org
-    }
-
-    void setOrg(Organization org) {
-        this.org = org
     }
 
     @Override

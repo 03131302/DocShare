@@ -3,6 +3,7 @@ package com.ocse.doc.domain
 class InfoData {
 
     static constraints = {
+        text nullable: true
     }
     static belongsTo = [type: InfoType, user: AdminUser]
     static mapping = {

@@ -4,6 +4,8 @@ class Organization {
 
     static constraints = {
         name nullable: false
+        parent nullable: true
+        text nullable: true
     }
     static hasMany = [roles: AdminRole]
 

@@ -4,6 +4,7 @@ class AdminRole {
 
     static constraints = {
         name nullable: false
+        text nullable: true
     }
 
     static belongsTo = [AdminUser, Organization]
