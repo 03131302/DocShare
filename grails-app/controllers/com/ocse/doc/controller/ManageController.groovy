@@ -1,5 +1,6 @@
 package com.ocse.doc.controller
 
+import com.ocse.doc.domain.AdminUser
 import groovy.sql.Sql
 
 class ManageController {
@@ -26,5 +27,10 @@ class ManageController {
                 listData.add(map)
         }
         render(contentType: "text/json") { listData }
+    }
+
+    def userManageIndex(Integer max) {
+        params.max = Math.min(max ?: 20, 100)
+        render view: "userManageIndex", model: [users: AdminUser.list(params), adminUserInstanceCount: AdminUser.count()]
     }
 }

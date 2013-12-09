@@ -9,6 +9,10 @@ class AdminUser {
         text nullable: true
     }
 
+    static mapping = {
+        sort pxh: "asc"
+    }
+
     static belongsTo = [org: Organization]
     static hasMany = [roles: AdminRole]
 
@@ -18,6 +22,15 @@ class AdminUser {
     String text
     int pxh
     boolean isStop
+    String jb
+
+    String getJb() {
+        return jb
+    }
+
+    void setJb(String jb) {
+        this.jb = jb
+    }
 
     boolean getIsStop() {
         return isStop
@@ -77,6 +90,7 @@ class AdminUser {
                 ", text='" + text + '\'' +
                 ", pxh=" + pxh +
                 ", isStop=" + isStop +
+                ", jb=" + jb +
                 ", version=" + version +
                 '}';
     }

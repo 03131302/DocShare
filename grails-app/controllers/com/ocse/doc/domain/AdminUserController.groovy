@@ -1,6 +1,7 @@
 package com.ocse.doc.domain
 
-
+import grails.converters.JSON
+import groovy.sql.Sql
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -8,15 +9,33 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class AdminUserController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    def dataSource
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond AdminUser.list(params), model: [adminUserInstanceCount: AdminUser.count()]
     }
 
-    def show(AdminUser adminUserInstance) {
-        respond adminUserInstance
+    def show(int id) {
+        Sql sql = new Sql(dataSource: dataSource)
+        def dataTemp = []
+        sql.eachRow("""SELECT [id]
+                      ,[version]
+                      ,[is_stop] isStop
+                      ,[org_id] org
+                      ,(select t.name from [DocManage].[dbo].[organization] t where t.id =[org_id]) orgName
+                      ,[pass_word] passWord
+                      ,[pxh]
+                      ,[text]
+                      ,[user_code] userCode
+                      ,[user_name] userName
+                      ,[jb]
+                  FROM [DocManage].[dbo].[admin_user] where [id]=${id}""") {
+            data ->
+                dataTemp = [id: data.id, isStop: data.isStop, org: data.org, orgName: data.orgName, passWord: data.passWord,
+                        pxh: data.pxh, text: data.text, userCode: data.userCode, userName: data.userName, jb: data.jb]
+        }
+        render dataTemp as JSON
     }
 
     def create() {
@@ -25,25 +44,16 @@ class AdminUserController {
 
     @Transactional
     def save(AdminUser adminUserInstance) {
-        if (adminUserInstance == null) {
-            notFound()
-            return
+        println(adminUserInstance)
+        String info = "true"
+        try {
+            adminUserInstance.save flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
-
-        if (adminUserInstance.hasErrors()) {
-            respond adminUserInstance.errors, view: 'create'
-            return
-        }
-
-        adminUserInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'adminUserInstance.label', default: 'AdminUser'), adminUserInstance.id])
-                redirect adminUserInstance
-            }
-            '*' { respond adminUserInstance, [status: CREATED] }
-        }
+        println(adminUserInstance.id)
+        render info
     }
 
     def edit(AdminUser adminUserInstance) {
@@ -52,44 +62,35 @@ class AdminUserController {
 
     @Transactional
     def update(AdminUser adminUserInstance) {
-        if (adminUserInstance == null) {
-            notFound()
-            return
+        String info = "true"
+        try {
+            adminUserInstance.save flush: true
+        } catch (Exception e) {
+            info = e.getMessage()
+            e.printStackTrace()
         }
-
-        if (adminUserInstance.hasErrors()) {
-            respond adminUserInstance.errors, view: 'edit'
-            return
-        }
-
-        adminUserInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'AdminUser.label', default: 'AdminUser'), adminUserInstance.id])
-                redirect adminUserInstance
-            }
-            '*' { respond adminUserInstance, [status: OK] }
-        }
+        render info
     }
 
     @Transactional
-    def delete(AdminUser adminUserInstance) {
+    def delete(String id) {
 
-        if (adminUserInstance == null) {
+        if (id == null) {
             notFound()
             return
         }
-
-        adminUserInstance.delete flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'AdminUser.label', default: 'AdminUser'), adminUserInstance.id])
-                redirect action: "index", method: "GET"
-            }
-            '*' { render status: NO_CONTENT }
+        String info = "true"
+        Sql sql = new Sql(dataSource: dataSource)
+        id.split(",").each {
+            data ->
+                try {
+                    sql.execute("delete from [DocManage].[dbo].[admin_user] where id=${data}")
+                } catch (Exception e) {
+                    e.printStackTrace()
+                    info = e.getMessage()
+                }
         }
+        render info
     }
 
     protected void notFound() {
