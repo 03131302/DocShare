@@ -24,7 +24,7 @@
                         <h2 class="panel-title">按单位查询</h2>
                     </div>
 
-                    <div class="panel-body">
+                    <div class="panel-body" style="height: 500px;">
                         Panel content
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                                                                    src="${resource(dir: "images", file: "shoujianjia.gif")}"/>
                                         </div>
 
-                                        <div class="col-md-11" style="padding-top: 5px;"><strong>收件夹</strong></div>
+                                        <div class="col-md-11" style="padding-top: 5px;"><strong>&nbsp;收件夹</strong></div>
                                     </div>
                                 </div>
 

@@ -1,6 +1,7 @@
 package com.ocse.doc.domain
 
-
+import grails.converters.JSON
+import groovy.sql.Sql
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
@@ -8,7 +9,7 @@ import grails.transaction.Transactional
 @Transactional(readOnly = true)
 class OrganizationController {
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    def dataSource
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -16,34 +17,38 @@ class OrganizationController {
     }
 
     def show(Organization organizationInstance) {
-        respond organizationInstance
+        render organizationInstance as JSON
     }
 
     def create() {
         respond new Organization(params)
     }
 
+    def move(int id, int tid) {
+        Sql sql = new Sql(dataSource: dataSource);
+        String info = "true"
+        try {
+            sql.execute("update [DocManage].[dbo].[organization] set [parent_id]=${tid} where [id]=${id}")
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage();
+        }
+        render info
+    }
+
     @Transactional
-    def save(Organization organizationInstance) {
-        if (organizationInstance == null) {
-            notFound()
-            return
+    def save() {
+        params.id = null;
+        println(params)
+        String info = "true"
+        try {
+            Organization organization = new Organization(params)
+            organization.save flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
-
-        if (organizationInstance.hasErrors()) {
-            respond organizationInstance.errors, view: 'create'
-            return
-        }
-
-        organizationInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'organizationInstance.label', default: 'Organization'), organizationInstance.id])
-                redirect organizationInstance
-            }
-            '*' { respond organizationInstance, [status: CREATED] }
-        }
+        render info
     }
 
     def edit(Organization organizationInstance) {
@@ -52,6 +57,7 @@ class OrganizationController {
 
     @Transactional
     def update(Organization organizationInstance) {
+        println(organizationInstance)
         if (organizationInstance == null) {
             notFound()
             return
@@ -61,16 +67,14 @@ class OrganizationController {
             respond organizationInstance.errors, view: 'edit'
             return
         }
-
-        organizationInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'Organization.label', default: 'Organization'), organizationInstance.id])
-                redirect organizationInstance
-            }
-            '*' { respond organizationInstance, [status: OK] }
+        String info = "true"
+        try {
+            organizationInstance.save flush: true
+        } catch (Exception e) {
+            e.printStackTrace();
+            info = e.getMessage();
         }
+        render info
     }
 
     @Transactional
@@ -80,16 +84,25 @@ class OrganizationController {
             notFound()
             return
         }
-
-        organizationInstance.delete flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Organization.label', default: 'Organization'), organizationInstance.id])
-                redirect action: "index", method: "GET"
+        String info = "true"
+        try {
+            Sql sql = new Sql(dataSource: dataSource)
+            sql.execute("""
+                          WITH orgtree([id],[name],[parent_id],[pxh]) as
+                         (
+                            SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id =${
+                organizationInstance.id
             }
-            '*' { render status: NO_CONTENT }
+                            UNION ALL
+                            SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
+                            where a.parent_id = b.id
+                        )
+                        delete from [DocManage].[dbo].[organization] where id in ( SELECT id  from orgtree)""")
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
+        render info
     }
 
     protected void notFound() {
