@@ -1,54 +1,75 @@
-
-<%@ page import="com.ocse.doc.domain.InfoType" %>
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'infoType.label', default: 'InfoType')}" />
-		<title><g:message code="default.list.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#list-infoType" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="list-infoType" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-				<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<table>
-			<thead>
-					<tr>
-					
-						<g:sortableColumn property="name" title="${message(code: 'infoType.name.label', default: 'Name')}" />
-					
-						<th><g:message code="infoType.parentInfoType.label" default="Parent Info Type" /></th>
-					
-						<g:sortableColumn property="pxh" title="${message(code: 'infoType.pxh.label', default: 'Pxh')}" />
-					
-					</tr>
-				</thead>
-				<tbody>
-				<g:each in="${infoTypeInstanceList}" status="i" var="infoTypeInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
-						<td><g:link action="show" id="${infoTypeInstance.id}">${fieldValue(bean: infoTypeInstance, field: "name")}</g:link></td>
-					
-						<td>${fieldValue(bean: infoTypeInstance, field: "parentInfoType")}</td>
-					
-						<td>${fieldValue(bean: infoTypeInstance, field: "pxh")}</td>
-					
-					</tr>
-				</g:each>
-				</tbody>
-			</table>
-			<div class="pagination">
-				<g:paginate total="${infoTypeInstanceCount ?: 0}" />
-			</div>
-		</div>
-	</body>
+<html lang="zh_CN">
+<head>
+    <meta name="layout" content="main"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>东营市环保局工作信息共享平台</title>
+</head>
+
+<body>
+<div class="container" style="width: 100%;margin: 15px 0px;0px;0px;">
+    <div class="row col-md-12" style="width: 100%;margin: 0px 0px;0px;0px;">
+        <g:include view="manage/manageLeft.gsp"></g:include>
+        <div class="col-md-9" style="padding-right: 0px;margin-right: 0px;">
+            <div class="panel panel-default">
+                <nav class="navbar navbar-default" role="navigation" style="margin-bottom: 2px;">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="javascript:void(0);">关键字管理</a>
+                    </div>
+                    <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
+                            data-target="#infoTypeModal">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 添加</button>
+                    <button type="button" class="btn btn-default navbar-btn" onclick="updateOrg()">
+                        <span class="glyphicon glyphicon-pencil"></span> 修改</button>
+                    <button type="button" class="btn btn-default navbar-btn" onclick="deleteOrg()">
+                        <span class="glyphicon glyphicon-trash"></span> 删除</button>
+                </nav>
+
+                <div class="panel-body">
+                    <div id="infoTypezTree" class="ztree" style="margin-top: 0px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="infoTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">关键字信息维护</h4>
+            </div>
+
+            <div class="modal-body">
+                <g:form controller="infoType" action="save" role="form" method="post" name="infoForm">
+                    <input type="hidden" class="form-control" id="parentInfoType" name="parentInfoType.id" value="">
+                    <input type="hidden" class="form-control" id="id" name="id" value="">
+
+                    <div class="form-group">
+                        <label for="name">关键字</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="关键字" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pxh">排序号</label>
+                        <input type="text" class="form-control" id="pxh" name="pxh" placeholder="排序号" required>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-plus-sign"></span>保存</button>
+                    </div>
+                </g:form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<r:require module="infoType"/>
 </html>

@@ -1,49 +1,69 @@
 package com.ocse.doc.domain
 
-
+import grails.converters.JSON
+import groovy.sql.Sql
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class InfoTypeController {
+    def dataSource
 
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
+    def index() {
+        render view: "index", model: [data: ""]
+    }
 
-    def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond InfoType.list(params), model: [infoTypeInstanceCount: InfoType.count()]
+    def getOrgTreeData() {
+        def listData = []
+        Sql sql = new Sql(dataSource: dataSource)
+        sql.eachRow("""
+                    SELECT [id]
+                          ,[version]
+                          ,[name]
+                          ,[parent_info_type_id]
+                          ,[pxh]
+                      FROM [DocManage].[dbo].[info_type] order by pxh""") {
+            data ->
+                def map = [id: data.id, name: data.name, pId: data.parent_info_type_id == null ? 0 : data.parent_info_type_id, drag: true]
+                listData.add(map)
+        }
+        render(contentType: "text/json") { listData }
     }
 
     def show(InfoType infoTypeInstance) {
-        respond infoTypeInstance
+        render infoTypeInstance as JSON
     }
 
     def create() {
         respond new InfoType(params)
     }
 
+    def move(int id, int tid) {
+        Sql sql = new Sql(dataSource: dataSource);
+        String info = "true"
+        try {
+            sql.execute("update [DocManage].[dbo].[info_type] set [parent_info_type_id]=${tid} where [id]=${id}")
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage();
+        }
+        render info
+    }
+
     @Transactional
-    def save(InfoType infoTypeInstance) {
-        if (infoTypeInstance == null) {
-            notFound()
-            return
+    def save() {
+        params.id = null;
+        println(params)
+        String info = "true"
+        try {
+            InfoType infoType = new InfoType(params)
+            infoType.save flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
-
-        if (infoTypeInstance.hasErrors()) {
-            respond infoTypeInstance.errors, view: 'create'
-            return
-        }
-
-        infoTypeInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'infoTypeInstance.label', default: 'InfoType'), infoTypeInstance.id])
-                redirect infoTypeInstance
-            }
-            '*' { respond infoTypeInstance, [status: CREATED] }
-        }
+        render info
     }
 
     def edit(InfoType infoTypeInstance) {
@@ -61,35 +81,41 @@ class InfoTypeController {
             respond infoTypeInstance.errors, view: 'edit'
             return
         }
-
-        infoTypeInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'InfoType.label', default: 'InfoType'), infoTypeInstance.id])
-                redirect infoTypeInstance
-            }
-            '*' { respond infoTypeInstance, [status: OK] }
+        String info = "true"
+        try {
+            infoTypeInstance.save flush: true
+        } catch (Exception e) {
+            info = e.getMessage()
+            e.printStackTrace()
         }
+        render info
     }
 
     @Transactional
     def delete(InfoType infoTypeInstance) {
-
         if (infoTypeInstance == null) {
             notFound()
             return
         }
-
-        infoTypeInstance.delete flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'InfoType.label', default: 'InfoType'), infoTypeInstance.id])
-                redirect action: "index", method: "GET"
+        String info = "true"
+        try {
+            Sql sql = new Sql(dataSource: dataSource)
+            sql.execute("""
+                          WITH orgtree([id],[name],[parent_info_type_id],[pxh]) as
+                         (
+                            SELECT [id],[name],[parent_info_type_id],[pxh] FROM [DocManage].[dbo].[info_type] WHERE id =${
+                infoTypeInstance.id
             }
-            '*' { render status: NO_CONTENT }
+                            UNION ALL
+                            SELECT a.[id],a.[name],a.[parent_info_type_id],a.[pxh] FROM [DocManage].[dbo].[info_type] A,orgtree b
+                            where a.parent_info_type_id = b.id
+                        )
+                        delete from [DocManage].[dbo].[info_type] where id in ( SELECT id  from orgtree)""")
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
+        render info
     }
 
     protected void notFound() {

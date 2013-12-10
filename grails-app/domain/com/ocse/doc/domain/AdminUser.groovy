@@ -1,6 +1,10 @@
 package com.ocse.doc.domain
 
+import groovy.sql.Sql
+
 class AdminUser {
+
+    def dataSource
 
     static constraints = {
         userName nullable: false
@@ -78,6 +82,24 @@ class AdminUser {
 
     void setPassWord(String passWord) {
         this.passWord = passWord
+    }
+
+    def beforeUpdate() {
+        log.info("开始执行:update.......")
+        Sql sql = new Sql(dataSource: dataSource);
+        String p = "";
+        sql.eachRow("select [pass_word] from [DocManage].[dbo].[admin_user] where id=${id}") { data ->
+            p = data.pass_word;
+        }
+        log.info("开始执行:update......." + p + ":" + passWord)
+        if (!p.equals(passWord)) {
+            passWord = passWord.encodeAsMD5()
+        }
+    }
+
+    def beforeInsert() {
+        log.info("开始执行:insert.......")
+        passWord = passWord.encodeAsMD5()
     }
 
     @Override

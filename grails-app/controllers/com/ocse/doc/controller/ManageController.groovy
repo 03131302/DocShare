@@ -33,4 +33,27 @@ class ManageController {
         params.max = Math.min(max ?: 20, 100)
         render view: "userManageIndex", model: [users: AdminUser.list(params), adminUserInstanceCount: AdminUser.count()]
     }
+
+    def updatePassWord(String oldPassWord, String newPassWord) {
+        AdminUser user = session["adminUser"];
+        if (user != null && !oldPassWord.empty && !newPassWord.empty) {
+            Sql sql = new Sql(dataSource: dataSource);
+            String d = "";
+            println(oldPassWord + ":" + user.getId() + ":" + oldPassWord.encodeAsMD5())
+            sql.eachRow("select id from [DocManage].[dbo].[admin_user] where [id]=? and [pass_word]=?", [user.getId(), oldPassWord.encodeAsMD5()]) {
+                data ->
+                    d = data.id;
+            }
+            if (d.empty) {
+                render "旧密码不正确！"
+            } else {
+                sql.execute("update [DocManage].[dbo].[admin_user] set [pass_word]=? where [id]=?", [newPassWord.encodeAsMD5(), d]);
+                render "true"
+                session.removeAttribute("adminUser");
+                session.invalidate();
+            }
+        } else {
+            render "请正确填写新旧密码！"
+        }
+    }
 }

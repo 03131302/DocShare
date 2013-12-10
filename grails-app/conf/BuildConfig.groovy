@@ -39,6 +39,7 @@ grails.project.dependency.resolution = {
         compile ':cache:1.1.1'
 
         runtime ":hibernate4:4.1.11.4"
+        compile ":jcaptcha:1.2.1"
         runtime ":database-migration:1.3.8"
         runtime ":jquery:1.10.2"
         runtime ":resources:1.2.1"

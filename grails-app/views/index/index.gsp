@@ -10,28 +10,22 @@
 <body>
 <div class="container" style="width: 100%;margin: 15px 0px;0px;0px;">
     <div class="row col-md-12" style="width: 100%;margin: 0px 0px;0px;0px;">
-        <div class="col-md-3" style="padding-left: 5px;">
+        <div class="col-md-2" style="padding-left: 5px;">
             <div class="row">
-                <div class="panel panel-default" style="margin-bottom: 5px;">
-                    <div class="panel-heading">
-                        <span class="glyphicon glyphicon-volume-up"></span>&nbsp;&nbsp;<span
-                            class="panel-title">杨晓东，欢迎您。</span>
-                    </div>
-                </div>
-
+                <g:include view="wellcome.gsp"></g:include>
                 <div class="panel panel-default" style="margin-top: 2px;">
                     <div class="panel-heading">
                         <h2 class="panel-title">按单位查询</h2>
                     </div>
 
-                    <div class="panel-body" style="height: 500px;">
-                        Panel content
+                    <div class="panel-body">
+                        <div id="indexzTree" class="ztree" style="margin-top: 0px;"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-9" style="padding-right: 0px;margin-right: 0px;">
+        <div class="col-md-10" style="padding-right: 0px;margin-right: 0px;">
             <nav class="navbar navbar-default" role="navigation" style="margin-bottom: 5px;">
                 <form class="navbar-form navbar-left" role="search">
                     <div class="form-group">
@@ -42,7 +36,7 @@
                 </form>
                 <button type="button" class="btn btn-default navbar-btn">
                     <span class="glyphicon glyphicon-globe"></span> 关键字检索</button>
-                <button type="button" class="btn btn-default navbar-btn">
+                <button type="button" class="btn btn-primary navbar-btn">
                     <span class="glyphicon glyphicon-plus-sign"></span> 信息发布</button>
             </nav>
 
@@ -78,7 +72,8 @@
                                                                    src="${resource(dir: "images", file: "shoujianjia.gif")}"/>
                                         </div>
 
-                                        <div class="col-md-11" style="padding-top: 5px;"><strong>&nbsp;收件夹</strong></div>
+                                        <div class="col-md-11" style="padding-top: 5px;"><strong>&nbsp;收件夹</strong>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -113,5 +108,6 @@
         </div>
     </div>
 </div>
+<r:require module="index"></r:require>
 </body>
 </html>
