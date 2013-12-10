@@ -1,8 +1,6 @@
 dataSource {
     pooled = true
     driverClassName = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
-    username = "docmanage"
-    password = "adminadmin"
     loggingSql = true
     dialect = org.hibernate.dialect.SQLServer2008Dialect
 }
@@ -16,7 +14,6 @@ environments {
     development {
         dataSource {
             dbCreate = ""
-            url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
                 minEvictableIdleTimeMillis = 1800000
@@ -33,7 +30,6 @@ environments {
     test {
         dataSource {
             dbCreate = ""
-            url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
                 minEvictableIdleTimeMillis = 1800000
@@ -50,7 +46,6 @@ environments {
     production {
         dataSource {
             dbCreate = ""
-            url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
                 minEvictableIdleTimeMillis = 1800000

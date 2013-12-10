@@ -12,19 +12,19 @@ import java.awt.*
 
 grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
 grails.mime.types = [
-    all:           '*/*',
-    atom:          'application/atom+xml',
-    css:           'text/css',
-    csv:           'text/csv',
-    form:          'application/x-www-form-urlencoded',
-    html:          ['text/html','application/xhtml+xml'],
-    js:            'text/javascript',
-    json:          ['application/json', 'text/json'],
-    multipartForm: 'multipart/form-data',
-    rss:           'application/rss+xml',
-    text:          'text/plain',
-    hal:           ['application/hal+json','application/hal+xml'],
-    xml:           ['text/xml', 'application/xml']
+        all: '*/*',
+        atom: 'application/atom+xml',
+        css: 'text/css',
+        csv: 'text/csv',
+        form: 'application/x-www-form-urlencoded',
+        html: ['text/html', 'application/xhtml+xml'],
+        js: 'text/javascript',
+        json: ['application/json', 'text/json'],
+        multipartForm: 'multipart/form-data',
+        rss: 'application/rss+xml',
+        text: 'text/plain',
+        hal: ['application/hal+json', 'application/hal+xml'],
+        xml: ['text/xml', 'application/xml']
 ]
 
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
@@ -32,6 +32,8 @@ grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
 grails.views.default.codec = "html"
 
 grails.controllers.defaultScope = 'singleton'
+
+grails.config.locations = ["classpath:datasource.properties"]
 
 grails {
     views {
@@ -50,7 +52,7 @@ grails {
         }
     }
 }
- 
+
 grails.converters.encoding = "UTF-8"
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
@@ -62,7 +64,7 @@ grails.enable.native2ascii = true
 // packages to include in Spring bean scanning
 grails.spring.bean.packages = []
 // whether to disable processing of multi part requests
-grails.web.disable.multipart=false
+grails.web.disable.multipart = false
 
 // request parameters to mask when logging exceptions
 grails.exceptionresolver.params.exclude = ['password']
