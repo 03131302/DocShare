@@ -1,14 +1,13 @@
 package com.ocse.doc.domain
 
+import grails.transaction.Transactional
 
+import java.text.SimpleDateFormat
 
 import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class InfoFileController {
-
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -21,6 +20,41 @@ class InfoFileController {
 
     def create() {
         respond new InfoFile(params)
+    }
+
+    def upload() {
+        def url = params.filePath
+        def f = request.getFile('Filedata')
+        String path = "/";
+        if (f != null && !f.empty) {
+            def webRootDir = servletContext.getRealPath("/")
+            def userDir = new File(webRootDir, "/upLoad/")
+            if (!userDir.exists()) {
+                userDir.mkdirs()
+            }
+            Date date = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+            String nd = dateFormat.format(date)
+            path += nd;
+            dateFormat = new SimpleDateFormat("MM");
+            String yd = dateFormat.format(date)
+            path += "/" + yd;
+            String dir = System.currentTimeMillis();
+            path += "/" + dir;
+            String temp = "";
+            path.split("/").each {
+                data ->
+                    temp += "/" + data
+                    userDir = new File(webRootDir, "/upLoad/" + temp)
+                    if (!userDir.exists()) {
+                        userDir.mkdirs()
+                    }
+            }
+            path += "/" + f.originalFilename
+            File file = new File(userDir, f.originalFilename);
+            f.transferTo(file)
+        }
+        render path.encodeAsURL()
     }
 
     @Transactional

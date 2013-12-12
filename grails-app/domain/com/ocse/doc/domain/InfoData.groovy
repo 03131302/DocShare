@@ -3,19 +3,46 @@ package com.ocse.doc.domain
 class InfoData {
 
     static constraints = {
-        text nullable: true
+        textData nullable: true
+        reType nullable: true
     }
     static belongsTo = [type: InfoType, user: AdminUser]
     static mapping = {
-        text sqlType: 'text'
+        textData sqlType: 'text'
     }
 
     String title
-    String shareType
     String shareScope
-    String text
+    String textData
     String saveState
     Date saveDate
+    String shareType
+    String reType
+
+    String getReType() {
+        return reType
+    }
+
+    void setReType(String reType) {
+        this.reType = reType
+    }
+
+    String getShareType() {
+
+        return shareType
+    }
+
+    void setShareType(String shareType) {
+        this.shareType = shareType
+    }
+
+    String getTextData() {
+        return textData
+    }
+
+    void setTextData(String textData) {
+        this.textData = textData
+    }
 
     String getTitle() {
         return title
@@ -33,28 +60,12 @@ class InfoData {
         this.title = title
     }
 
-    String getShareType() {
-        return shareType
-    }
-
-    void setShareType(String shareType) {
-        this.shareType = shareType
-    }
-
     String getShareScope() {
         return shareScope
     }
 
     void setShareScope(String shareScope) {
         this.shareScope = shareScope
-    }
-
-    String getText() {
-        return text
-    }
-
-    void setText(String text) {
-        this.text = text
     }
 
     String getSaveState() {
@@ -70,14 +81,13 @@ class InfoData {
         return "InfoData{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
-                ", shareType='" + shareType + '\'' +
                 ", shareScope='" + shareScope + '\'' +
-                ", text='" + text + '\'' +
+                ", textData='" + textData + '\'' +
                 ", saveState='" + saveState + '\'' +
                 ", saveDate=" + saveDate +
+                ", shareType='" + shareType + '\'' +
+                ", reType='" + reType + '\'' +
                 ", version=" + version +
-                ", type=" + type +
-                ", user=" + user +
                 '}';
     }
 }
