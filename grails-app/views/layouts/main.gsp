@@ -203,6 +203,30 @@
     </div>
 </div>
 
+<div class="modal fade" id="infoTypeModalSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">信息类型</h4>
+            </div>
+
+            <div class="modal-body">
+                <div id="infoTypeSearchzTree" class="ztree" style="padding-top: 0px;">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
+                <button type="button" class="btn btn-primary" onclick="selectInfoTypeSearch()">
+                    <span class="glyphicon glyphicon-plus-sign"></span> 确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="modal fade" id="infoOrgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">

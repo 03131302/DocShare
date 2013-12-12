@@ -26,21 +26,7 @@
 </div>
 
 <div class="col-md-10" style="padding-right: 0px;margin-right: 0px;">
-<nav class="navbar navbar-default" role="navigation" style="margin-bottom: 5px;">
-    <form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-            <input type="text" class="form-control" placeholder="搜索全部文件">
-        </div>
-        <button type="submit" class="btn btn-default">
-            <span class="glyphicon glyphicon-search"></span> 搜索</button>
-    </form>
-    <button type="button" class="btn btn-default navbar-btn">
-        <span class="glyphicon glyphicon-globe"></span> 关键字检索</button>
-    <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
-            data-target="#infoNewModal">
-        <span class="glyphicon glyphicon-random"></span> 信息发布</button>
-</nav>
-
+<g:include view="index/bar.gsp"></g:include>
 <div class="panel panel-default">
 <div class="panel-body">
 <div class="row">
@@ -59,6 +45,7 @@
         <table class="table table-striped table-condensed table-hover">
             <thead>
             <tr>
+                <th style="text-align: center;">#</th>
                 <th>主题</th>
                 <th>发布时间</th>
                 <th>快速访问</th>
@@ -67,6 +54,7 @@
             <tbody>
             <g:each in="${sendList}" var="data" status="n">
                 <tr>
+                    <td style="width: 30px;text-align: center;">${n + 1}</td>
                     <td><g:link name="${data.title}"
                                 title="${data.title}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}</g:link></td>
                     <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
@@ -112,8 +100,9 @@
             </tbody>
         </table>
 
-        <div class="panel-footer text-right" style="color: #1316e3"><span
-                class="glyphicon glyphicon-th-large"></span>&nbsp;更多</div>
+        <div class="panel-footer text-right" style="color: #1316e3"><g:link controller="index" action="more"
+                                                                            params="${[theType: 1]}"><span
+                    class="glyphicon glyphicon-th-large"></span>&nbsp;更多</g:link></div>
     </div>
 </div>
 
@@ -133,6 +122,7 @@
         <table class="table table-striped table-condensed table-hover">
             <thead>
             <tr>
+                <th style="text-align: center;">#</th>
                 <th>主题</th>
                 <th>发布时间</th>
                 <th>快速访问</th>
@@ -141,6 +131,7 @@
             <tbody>
             <g:each in="${recveList}" var="data" status="n">
                 <tr>
+                    <td style="width: 30px;text-align: center;">${n + 1}</td>
                     <td><g:link name="${data.title}"
                                 title="${data.title}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}</g:link></td>
                     <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
@@ -186,8 +177,9 @@
             </tbody>
         </table>
 
-        <div class="panel-footer text-right" style="color: #1316e3"><span
-                class="glyphicon glyphicon-th-large"></span>&nbsp;更多</div>
+        <div class="panel-footer text-right" style="color: #1316e3"><g:link controller="index" action="more"
+                                                                            params="${[theType: 2]}"><span
+                    class="glyphicon glyphicon-th-large"></span>&nbsp;更多</g:link></div>
     </div>
 </div>
 
@@ -202,6 +194,7 @@
         <table class="table table-striped table-condensed table-hover">
             <thead>
             <tr>
+                <th style="text-align: center;">#</th>
                 <th>主题</th>
                 <th>发布时间</th>
                 <th>信息类型</th>
@@ -213,8 +206,9 @@
             <tbody>
             <g:each in="${allList}" var="data" status="n">
                 <tr>
+                    <td style="width: 40px;text-align: center;">${n + 1}</td>
                     <td><g:link name="${data.title}"
-                                title="${data.title}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}</g:link></td>
+                                title="${data.title}">${data.title.length() > 30 ? data.title.substring(0, 30) + "..." : data.title}</g:link></td>
                     <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
                     <td>${data.type}</td>
                     <td>${data.user}</td>
@@ -261,8 +255,9 @@
             </tbody>
         </table>
 
-        <div class="panel-footer text-right" style="color: #1316e3"><span
-                class="glyphicon glyphicon-th-large"></span>&nbsp;更多</div>
+        <div class="panel-footer text-right" style="color: #1316e3"><g:link controller="index" action="more"
+                                                                            params="${[theType: 3]}"><span
+                    class="glyphicon glyphicon-th-large"></span>&nbsp;更多</g:link></div>
     </div>
 </div>
 </div>

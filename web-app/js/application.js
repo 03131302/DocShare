@@ -126,6 +126,49 @@ function initTree() {
             $.fn.zTree.init($("#infoOrgzTree"), setting2, zNodes);
         }
     });
+
+    var setting3 = {
+        data: {
+            simpleData: {
+                enable: true
+            }
+        },
+        callback: {
+            onDblClick: function (event, treeId, treeNode) {
+                var pid = treeNode.id;
+                $("#typeKey").val(pid);
+                $("#typeKeyBut").text(treeNode.name);
+                $("#typeKeyName").val(treeNode.name);
+                $('#infoTypeModalSearch').modal('hide');
+                $("#search")[0].submit();
+            }
+        }
+    };
+    $.ajax({
+        type: "GET",
+        url: getLocation() + "infoType/getOrgTreeData",
+        cache: false,
+        async: false,
+        success: function (msg) {
+            var zNodes = msg;
+            $.fn.zTree.init($("#infoTypeSearchzTree"), setting3, zNodes);
+            var zTree = $.fn.zTree.getZTreeObj("infoTypeSearchzTree");
+            zTree.expandAll(true);
+        }
+    });
+}
+
+function selectInfoTypeSearch() {
+    var zTree = $.fn.zTree.getZTreeObj("infoTypeSearchzTree");
+    var nodes = zTree.getSelectedNodes();
+    if (nodes && nodes[0]) {
+        var treeNode = nodes[0];
+        $("#typeKey").val(treeNode.id);
+        $("#typeKeyName").val(treeNode.name);
+        $("#typeKeyBut").text(treeNode.name);
+        $('#infoTypeModalSearch').modal('hide');
+        $("#search")[0].submit();
+    }
 }
 
 function selectInfoType() {

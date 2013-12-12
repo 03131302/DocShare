@@ -19,7 +19,7 @@ function initTree() {
     };
     $.ajax({
         type: "GET",
-        url: "index/getOrgTreeData",
+        url: getLocation() + "index/getOrgTreeData",
         cache: false,
         async: false,
         success: function (msg) {
