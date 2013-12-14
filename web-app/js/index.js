@@ -31,6 +31,16 @@ function initTree() {
     });
 }
 
+function submitFile(id) {
+    $("#infoDataObject").val(id);
+    $('#infoNewModal').modal('show');
+}
+
+function submitText(id) {
+    $("#infoData").val(id);
+    $('#infoNewreTypeModal').modal('show');
+}
+
 function downloadFile(id) {
     $.ajax({
         type: "GET",

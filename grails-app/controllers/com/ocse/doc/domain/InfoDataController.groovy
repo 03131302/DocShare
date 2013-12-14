@@ -1,9 +1,10 @@
 package com.ocse.doc.domain
 
+import grails.transaction.Transactional
 import groovy.sql.Sql
 
-import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
+import static org.springframework.http.HttpStatus.NOT_FOUND
+import static org.springframework.http.HttpStatus.OK
 
 @Transactional(readOnly = true)
 class InfoDataController {
@@ -71,7 +72,6 @@ class InfoDataController {
 
     @Transactional
     def save() {
-        println(params)
         InfoData infoData = new InfoData(params)
         infoData.saveDate = new Date()
         infoData.saveState = "保存"
@@ -127,7 +127,6 @@ class InfoDataController {
                 infoLog.type = "新增"
                 infoLog.ip = request.getRemoteAddr()
                 infoLog.save flash: true
-                println infoData
             } catch (Exception e) {
                 e.printStackTrace()
                 info = e.getMessage()
@@ -137,30 +136,93 @@ class InfoDataController {
     }
 
     def edit(InfoData infoDataInstance) {
-        respond infoDataInstance
+        def fileList = []
+        InfoFile.where {
+            infoData == infoDataInstance
+        }.list().each {
+            data ->
+                def map = [id: data.id, path: data.path, name: data.name]
+                fileList.add(map)
+        }
+        def userList = []
+        def users = InfoUserScope.where {
+            info == infoDataInstance
+        }.list().each {
+            data ->
+                def map = [name: data.user.userName, id: data.user.id]
+                userList.add(map)
+        }
+        InfoType type = InfoType.get(infoDataInstance.type.id)
+        render(contentType: "text/json") {
+            [infoData: infoDataInstance, files: fileList
+                    , users: userList, type: type]
+        }
     }
 
     @Transactional
     def update(InfoData infoDataInstance) {
-        if (infoDataInstance == null) {
-            notFound()
-            return
-        }
-
-        if (infoDataInstance.hasErrors()) {
-            respond infoDataInstance.errors, view: 'edit'
-            return
-        }
-
-        infoDataInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.updated.message', args: [message(code: 'InfoData.label', default: 'InfoData'), infoDataInstance.id])
-                redirect infoDataInstance
+        InfoData infoData = infoDataInstance
+        println infoData
+        infoData.saveDate = new Date()
+        infoData.saveState = "修改"
+        String info = "true"
+        if (infoData.hasErrors()) {
+            info = "请检查填写内容！"
+        } else {
+            try {
+                Sql sql = new Sql(dataSource: dataSource)
+                infoData.save flash: true
+                String filePathValue = params.filePathValue
+                if (filePathValue != null && !filePathValue.empty && infoData.id != null) {
+                    sql.execute("""delete from [DocManage].[dbo].[info_file] where [info_data_id]=${infoData.id}""")
+                    filePathValue.split(";").each { data ->
+                        InfoFile file = new InfoFile()
+                        file.infoData = infoData
+                        file.saveDate = new Date()
+                        file.state = 0
+                        file.path = data
+                        file.name = data.decodeURL().toString().substring(data.decodeURL().toString().lastIndexOf("/") + 1, data.decodeURL().toString().length())
+                        if (file.name != null && !file.name.empty) {
+                            file.save flash: true
+                        }
+                    }
+                }
+                String userScopeData = params.userScopeData
+                if (userScopeData != null && !userScopeData.empty && infoData.id != null) {
+                    sql.execute("""delete from [DocManage].[dbo].[info_user_scope] where [info_id]=${infoData.id}""")
+                    userScopeData.split(";").each { data ->
+                        int n = 0
+                        sql.eachRow("select count([id]) id from [DocManage].[dbo].[admin_user] where Cast([id] as varchar)='${data}'") {
+                            d ->
+                                n = d.id
+                        }
+                        if (n > 0) {
+                            InfoUserScope infoUserScope = new InfoUserScope()
+                            infoUserScope.info = infoData
+                            infoUserScope.user = AdminUser.get(data)
+                            infoUserScope.save flash: true
+                        }
+                    }
+                }
+                if (params.infoDataObject != null && !params.infoDataObject.empty) {
+                    Recipient recipient = new Recipient(user: session["adminUser"], infoData: InfoData.get(params.infoDataObject),
+                            text: infoData.id)
+                    println recipient
+                    recipient.save flash: true
+                }
+                InfoLog infoLog = new InfoLog()
+                infoLog.infoData = infoData
+                infoLog.user = session["adminUser"]
+                infoLog.infoDate = new Date()
+                infoLog.type = "修改"
+                infoLog.ip = request.getRemoteAddr()
+                infoLog.save flash: true
+            } catch (Exception e) {
+                e.printStackTrace()
+                info = e.getMessage()
             }
-            '*' { respond infoDataInstance, [status: OK] }
         }
+        render info
     }
 
     def downloadFile(InfoData infoDataInstance) {

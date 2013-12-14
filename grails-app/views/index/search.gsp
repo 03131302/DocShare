@@ -111,6 +111,7 @@
         </div>
     </div>
 </div>
+<iframe id="fileDown" src="" width="0" hidden="hidden" height="0"></iframe>
 <r:require module="index"></r:require>
 </body>
 </html>

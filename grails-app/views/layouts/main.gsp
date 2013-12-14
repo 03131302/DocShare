@@ -112,7 +112,7 @@
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <input type="hidden" class="form-control"
-                                           id="type" name="type">
+                                           id="type" name="type.id">
                                     <input type="text" readonly class="form-control"
                                            id="shareTypeName" name="shareTypeName">
                                     <span class="input-group-btn">
@@ -162,6 +162,9 @@
                         <div class="col-md-12">
                             <input type="hidden" name="filePathValue" id="filePathValue">
                             <input type="file" name="filePath" id="filePath">
+                        </div>
+
+                        <div class="col-md-12" id="fileList">
                         </div>
                     </div>
 
@@ -265,8 +268,8 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">用户范围选择</h4>
+                <button type="button" class="btn btn-primary navbar-btn" onclick="selectUserData(true)">
+                    <span class="glyphicon glyphicon-check"></span> 全部用户</button>
             </div>
 
             <div class="modal-body">

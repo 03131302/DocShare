@@ -199,22 +199,110 @@ function selectInfoType() {
 }
 
 function selectUser() {
+    var data = $("#userScopeData").val();
+    if (data) {
+        var zTree = $.fn.zTree.getZTreeObj("infoOrgzTree");
+        $.each(data.split(";"), function (i, n) {
+            if (n) {
+                var nodes = zTree.getNodesByParam("id", n, null);
+                $.each(nodes, function (i, node) {
+                    zTree.checkNode(node, true);
+                });
+            }
+        });
+    }
     $('#infoOrgModal').modal('show');
 }
 
-function selectUserData() {
-    var zTree = $.fn.zTree.getZTreeObj("infoOrgzTree");
-    var data = zTree.getCheckedNodes(true);
-    var temp = "";
-    var tempName = "";
-    for (i = 0; i < data.length; i++) {
-        if (!data[i].isParent) {
-            temp += data[i].id + ";";
-            tempName += data[i].name + ";";
+function selectUserData(type) {
+    if (type) {
+        $("#shareType").val("全部");
+        $("#userScope").val("全部");
+        $("#userScopeData").val("");
+        $('#infoOrgModal').modal('hide');
+    } else {
+        var zTree = $.fn.zTree.getZTreeObj("infoOrgzTree");
+        var data = zTree.getCheckedNodes(true);
+        var temp = "";
+        var tempName = "";
+        for (i = 0; i < data.length; i++) {
+            if (!data[i].isParent) {
+                temp += data[i].id + ";";
+                tempName += data[i].name + ";";
+            }
         }
+        $("#shareType").val("局部");
+        $("#userScope").val(tempName);
+        $("#userScopeData").val(temp);
+        $('#infoOrgModal').modal('hide');
     }
-    $("#shareType").val("局部");
-    $("#userScope").val(tempName);
-    $("#userScopeData").val(temp);
-    $('#infoOrgModal').modal('hide');
+}
+
+function updateInfoNew(id) {
+    $("#infoDataObject").val("");
+    $.ajax({
+        type: "GET",
+        url: getLocation() + "infoData/edit",
+        cache: false,
+        async: false,
+        data: {id: id, date: new Date()},
+        success: function (msg) {
+            if (msg) {
+                $("#infoDataForm").append("<input type=\"hidden\" class=\"form-control\" id=\"id\" name=\"id\" value=\"\">");
+                $("#infoDataForm").attr("action", getLocation() + "infoData/update")
+                var infoData = msg.infoData;
+                if (infoData) {
+                    $.each(infoData, function (i, n) {
+                        $("#" + i).val(n);
+                        if (i == "type") {
+                            if (n) {
+                                $("#type").val(n.id);
+                            }
+                        }
+                        if (i == "textData") {
+                            for (instance in CKEDITOR.instances) {
+                                CKEDITOR.instances[instance].setData(n);
+                            }
+                        }
+                    });
+                }
+                var type = msg.type
+                if (type) {
+                    $("#shareTypeName").val(type.name);
+                }
+                var files = msg.files;
+                if (files) {
+                    $.each(files, function (i, n) {
+                        if (i == 0) {
+                            $("#fileList").html("");
+                            $("#fileList").append("<ul id=\"list\" class=\"list-group\"></ul>");
+                        }
+                        $("#filePathValue").val(n.path + ";" + $("#filePathValue").val());
+                        $("#list").append("<li class=\"list-group-item\">" + n.name + " <button onclick=\"deleteFile('" + n.path + "',this)\" type=\"button\" class=\"btn btn-link\">删除</button></li>");
+                    });
+                }
+                var users = msg.users;
+                if (users) {
+                    $.each(users, function (i, n) {
+                        if (i == 0) {
+                            $("#userScope").val("");
+                        }
+                        $("#userScope").val(n.name + ";" + $("#userScope").val());
+                        $("#userScopeData").val(n.id + ";" + $("#userScopeData").val());
+                        $("#shareType").val("局部");
+                    });
+                }
+            }
+            $('#infoNewModal').modal('show');
+        }
+    });
+}
+
+function deleteFile(path, obj) {
+    if (confirm("确定删除该文件？")) {
+        var pathAll = $("#filePathValue").val().toString();
+        pathAll = pathAll.replace(path, "");
+        $("#filePathValue").val(pathAll);
+        $(obj).parent().remove();
+    }
 }
