@@ -1,107 +1,127 @@
-
 <%@ page import="com.ocse.doc.domain.InfoData" %>
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'infoData.label', default: 'InfoData')}" />
-		<title><g:message code="default.show.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#show-infoData" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="list" action="index"><g:message code="default.list.label" args="[entityName]" /></g:link></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="show-infoData" class="content scaffold-show" role="main">
-			<h1><g:message code="default.show.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-			<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<ol class="property-list infoData">
-			
-				<g:if test="${infoDataInstance?.text}">
-				<li class="fieldcontain">
-					<span id="text-label" class="property-label"><g:message code="infoData.text.label" default="Text" /></span>
-					
-						<span class="property-value" aria-labelledby="text-label"><g:fieldValue bean="${infoDataInstance}" field="text"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${infoDataInstance?.saveDate}">
-				<li class="fieldcontain">
-					<span id="saveDate-label" class="property-label"><g:message code="infoData.saveDate.label" default="Save Date" /></span>
-					
-						<span class="property-value" aria-labelledby="saveDate-label"><g:formatDate date="${infoDataInstance?.saveDate}" /></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${infoDataInstance?.saveState}">
-				<li class="fieldcontain">
-					<span id="saveState-label" class="property-label"><g:message code="infoData.saveState.label" default="Save State" /></span>
-					
-						<span class="property-value" aria-labelledby="saveState-label"><g:fieldValue bean="${infoDataInstance}" field="saveState"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${infoDataInstance?.shareScope}">
-				<li class="fieldcontain">
-					<span id="shareScope-label" class="property-label"><g:message code="infoData.shareScope.label" default="Share Scope" /></span>
-					
-						<span class="property-value" aria-labelledby="shareScope-label"><g:fieldValue bean="${infoDataInstance}" field="shareScope"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${infoDataInstance?.shareType}">
-				<li class="fieldcontain">
-					<span id="shareType-label" class="property-label"><g:message code="infoData.shareType.label" default="Share Type" /></span>
-					
-						<span class="property-value" aria-labelledby="shareType-label"><g:fieldValue bean="${infoDataInstance}" field="shareType"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${infoDataInstance?.title}">
-				<li class="fieldcontain">
-					<span id="title-label" class="property-label"><g:message code="infoData.title.label" default="Title" /></span>
-					
-						<span class="property-value" aria-labelledby="title-label"><g:fieldValue bean="${infoDataInstance}" field="title"/></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${infoDataInstance?.type}">
-				<li class="fieldcontain">
-					<span id="type-label" class="property-label"><g:message code="infoData.type.label" default="Type" /></span>
-					
-						<span class="property-value" aria-labelledby="type-label"><g:link controller="infoType" action="show" id="${infoDataInstance?.type?.id}">${infoDataInstance?.type?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-				<g:if test="${infoDataInstance?.user}">
-				<li class="fieldcontain">
-					<span id="user-label" class="property-label"><g:message code="infoData.user.label" default="User" /></span>
-					
-						<span class="property-value" aria-labelledby="user-label"><g:link controller="adminUser" action="show" id="${infoDataInstance?.user?.id}">${infoDataInstance?.user?.encodeAsHTML()}</g:link></span>
-					
-				</li>
-				</g:if>
-			
-			</ol>
-			<g:form url="[resource:infoDataInstance, action:'delete']" method="DELETE">
-				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${infoDataInstance}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
-					<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
-				</fieldset>
-			</g:form>
-		</div>
-	</body>
+<html lang="zh_CN">
+<head>
+    <meta name="layout" content="main"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>东营市环保局工作信息共享平台</title>
+</head>
+
+<body>
+<div class="container" style="width: 100%;margin: 15px 0px;0px;0px;">
+    <div class="row col-md-12" style="width: 100%;margin: 0px 0px;0px;0px;">
+        <div class="col-md-2" style="padding-left: 5px;">
+            <div class="row">
+                <g:include view="wellcome.gsp"></g:include>
+                <div class="panel panel-default" style="margin-top: 2px;">
+                    <div class="panel-heading">
+                        <h2 class="panel-title">按单位查询</h2>
+                    </div>
+
+                    <div class="panel-body">
+                        <div id="indexzTree" class="ztree" style="margin-top: 0px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10" style="padding-right: 0px;margin-right: 0px;">
+            <g:include view="index/bar.gsp"></g:include>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <img style="margin-top: 0px;"
+                         src="${resource(dir: "images", file: "quanjuxinxi.gif")}"/>
+                    <sapn style="padding-top: 10px;"><strong>${infoDataInstance.title}</strong></sapn>
+                </div>
+
+                <div class="panel-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td><strong>发布类型：</strong></td>
+                            <td>${infoDataInstance?.shareType}</td>
+                            <td><strong>信息类型：</strong></h4></td>
+                            <td>${infoDataInstance?.type?.name}</td>
+                            <td><strong>反馈类型：</strong></h4></td>
+                            <td>${infoDataInstance?.reType}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>收件人：</strong></td>
+                            <td colspan="3">${(infoDataInstance?.shareType.equals("全部") ? "全部" : users)}</td>
+                            <td><strong>日期：</strong></h4></td>
+                            <td><g:formatDate format="yyyy-MM-dd" date="${infoDataInstance?.saveDate}"/></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><strong>文件列表</strong></td>
+                        </tr>
+                        <g:each in="${fileList}" status="n" var="file">
+                            <tr>
+                                <td colspan="6"><g:link controller="infoFile" action="show"
+                                                        params="${[id: file.id]}"><strong>${file.name}</strong></g:link>
+                                </td>
+                            </tr>
+                        </g:each>
+                        <tr>
+                            <td><strong>主题：</strong></td>
+                            <td colspan="5">${infoDataInstance?.title}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><strong>简介</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">${raw(infoDataInstance?.textData)}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6"><strong>反馈信息</strong></td>
+                        </tr>
+                        <g:each in="${reTypeList}" var="typeData" status="n">
+                            <tr>
+                                <td style="text-align: center;"><strong>${n+1}</strong></td>
+                                <td><strong>反馈人：</strong></td>
+                                <td>${typeData.user.userName}</td>
+                                <td><strong>反馈人内容：</strong></td>
+                                <g:if test="${typeData.text.isInteger() && InfoData.get(typeData.text) != null}">
+                                    <td colspan="1"><g:link controller="infoData" action="show"
+                                                            params="${[id: InfoData.get(typeData.text).id]}">${InfoData.get(typeData.text).title}</g:link></td>
+                                </g:if>
+                                <g:else>
+                                    <td colspan="1">${typeData.text}</td>
+                                </g:else>
+                                <td>
+                                    <button type="button" class="btn btn-primary"
+                                            onclick="deleteReType('${typeData.id}')"><span
+                                            class="glyphicon glyphicon-trash" ${typeData.user.id == session["adminUser"].id ? "" : "disabled"}></span> 删除
+                                    </button>
+                                </td>
+                            </tr>
+                        </g:each>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="panel-footer">
+                    <g:if test="${infoDataInstance?.reType != null}">
+                        <g:if test="${"文件提交反馈".equals(infoDataInstance?.reType)}">
+                            <button type="button"
+                                    class="btn btn-primary navbar-btn"
+                                    data-toggle="modal"
+                                    data-target="#infoNewModal">
+                                <span class="glyphicon glyphicon-calendar"></span> 提交反馈</button>
+                        </g:if>
+                        <g:if test="${"查收回执".equals(infoDataInstance?.reType)}">
+                            <button type="button"
+                                    class="btn btn-primary navbar-btn"
+                                    data-toggle="modal"
+                                    data-target="#infoNewreTypeModal">
+                                <span class="glyphicon glyphicon-calendar"></span> 提交回执</button>
+                        </g:if>
+                    </g:if>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<r:require module="index"></r:require>
+</body>
 </html>

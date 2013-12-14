@@ -56,7 +56,8 @@
                                     <g:each in="${searchList}" var="data" status="n">
                                         <tr>
                                             <td><g:link name="${data.title}"
-                                                        title="${data.title}">${data.title.length() > 30 ? data.title.substring(0, 30) + "..." : data.title}</g:link></td>
+                                                        title="${data.title}" controller="infoData"
+                                                        action="show" params="${[id: data.id]}">${data.title.length() > 30 ? data.title.substring(0, 30) + "..." : data.title}</g:link></td>
                                             <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
                                             <td>${data.type}</td>
                                             <td>${data.user}</td>

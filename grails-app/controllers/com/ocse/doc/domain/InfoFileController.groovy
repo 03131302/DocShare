@@ -15,7 +15,32 @@ class InfoFileController {
     }
 
     def show(InfoFile infoFileInstance) {
-        respond infoFileInstance
+        response.reset();
+        def name = URLEncoder.encode(infoFileInstance.name, "UTF-8");
+        response.setHeader("Content-disposition", "attachment; filename=${name}")
+        response.contentType = "application/x-rarx-rar-compressed"
+        def webRootDir = servletContext.getRealPath("/")
+        def userDir = new File(webRootDir, "/upLoad/${infoFileInstance.path.decodeURL()}")
+        println userDir.absolutePath
+        def out = response.outputStream
+        def inputStream = new FileInputStream(userDir)
+        try {
+            byte[] buffer = new byte[1024]
+            int i = -1
+            while ((i = inputStream.read(buffer)) != -1) {
+                out.write(buffer, 0, i)
+            }
+            out.flush()
+        } catch (Exception e) {
+            e.printStackTrace()
+        } finally {
+            if (out != null) {
+                out.close()
+            }
+            if (inputStream != null) {
+                inputStream.close()
+            }
+        }
     }
 
     def create() {

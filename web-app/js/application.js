@@ -50,6 +50,22 @@ function initEdit() {
     };
     $('#infoDataForm').ajaxForm(options);
 
+
+    var options2 = {
+        beforeSubmit: function showRequest() {
+            return true;
+        },
+        success: function showResponse(responseText) {
+            if (responseText == "true") {
+                alert("提交回执成功！");
+                document.location.reload();
+            } else {
+                alert(responseText);
+            }
+        }
+    };
+    $('#infoDatareTypeForm').ajaxForm(options2);
+
     if ($("#textData").length) {
         CKEDITOR.replace('textData', {
             toolbar: 'Basic',

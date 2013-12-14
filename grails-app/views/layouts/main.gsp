@@ -92,6 +92,8 @@
             <div class="modal-body">
                 <g:form controller="infoData" action="save" method="post" class="form-horizontal" role="form"
                         name="infoDataForm">
+                    <input type="hidden" id="infoDataObject" name="infoDataObject" value="${infoDataInstance?.id}">
+
                     <div class="form-group">
                         <div class="col-md-4" style="padding-left: 0px;margin-left: 0px;">
                             <label for="shareScope" class="col-md-4 control-label">发布类型</label>
@@ -165,6 +167,37 @@
 
                     <div class="form-group" style="margin-left: 2px;">
                         <textarea name="textData" id="textData"></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-plus-sign"></span> 确定</button>
+                    </div>
+                </g:form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="infoNewreTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">提交回执</h4>
+            </div>
+
+            <div class="modal-body">
+                <g:form controller="recipient" action="save" method="post" class="form-horizontal" role="form"
+                        name="infoDatareTypeForm">
+                    <input type="hidden" id="infoData" name="infoData.id" value="${infoDataInstance?.id}">
+                    <input type="hidden" id="user" name="user.id" value="${session["adminUser"]?.id}">
+
+                    <div class="form-group">
+                        <textarea name="text" id="text" class="form-control" rows="3" required></textarea>
                     </div>
 
                     <div class="modal-footer">

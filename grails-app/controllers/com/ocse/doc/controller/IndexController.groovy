@@ -163,12 +163,21 @@ class IndexController {
                 }
                 params.sort = "saveDate"
                 params.order = "desc"
-                def results = InfoData.findAll("from InfoUserScope o,InfoData d where o.user=d.user" +
+                def theData = []
+                def results = InfoData.findAll("from InfoData d,InfoUserScope o where o.info=d " +
                         " and  o.user.id=${session["adminUser"].id} order by d.saveDate desc", [max: params.max, offset: params.offset])
-                def o = InfoData.executeQuery("select count(d.id) from InfoUserScope o,InfoData d where o.user=d.user" +
+                def o = InfoData.executeQuery("select count(d.id) from InfoUserScope o,InfoData d where o.info=d " +
                         " and  o.user.id='${session["adminUser"].id}'")
+                results.each { data ->
+                    data.each {
+                        d->
+                            if(d instanceof InfoData){
+                                theData.add(d)
+                            }
+                    }
+                }
                 render view: "more", model: [infoDataInstanceCount: o[0],
-                        infoData: results, title: "收件箱"]
+                        infoData: theData, title: "收件箱"]
                 break
             case "3":
                 def results = InfoData.where {

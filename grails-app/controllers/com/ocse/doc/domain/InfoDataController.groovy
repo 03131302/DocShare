@@ -16,7 +16,31 @@ class InfoDataController {
     }
 
     def show(InfoData infoDataInstance) {
-        respond infoDataInstance
+        Sql sql = new Sql(dataSource: dataSource)
+        String users = ""
+        println infoDataInstance.shareType
+        if ("局部".equals(infoDataInstance.shareType)) {
+            sql.eachRow("""SELECT (select m.user_name from [DocManage].[dbo].[admin_user] m
+                         where m.[id]=t.[user_id]) [user]
+                        FROM [DocManage].[dbo].[info_user_scope] t where t.info_id=${infoDataInstance.id}""") {
+                data ->
+                    users += data.user + ";"
+            }
+        }
+        def fileList = []
+        sql.eachRow("""SELECT [id]
+                              ,[name]
+                              ,[save_date]
+                          FROM [DocManage].[dbo].[info_file] t where t.info_data_id=${infoDataInstance.id}""") {
+            data ->
+                def map = [id: data.id, name: data.name]
+                fileList.add(map)
+        }
+        def c = Recipient.where {
+            infoData == infoDataInstance
+        }
+        render view: "show", model: [infoDataInstance: infoDataInstance, users: users,
+                fileList: fileList, reTypeList: c.list()]
     }
 
     def getUserTree() {
@@ -89,6 +113,13 @@ class InfoDataController {
                         }
                     }
                 }
+                if (params.infoDataObject != null && !params.infoDataObject.empty) {
+                    println InfoData.get(params.infoDataObject)
+                    Recipient recipient = new Recipient(user: session["adminUser"], infoData: InfoData.get(params.infoDataObject),
+                            text: infoData.id)
+                    println recipient
+                    recipient.save flash: true
+                }
                 InfoLog infoLog = new InfoLog()
                 infoLog.infoData = infoData
                 infoLog.user = session["adminUser"]
@@ -132,6 +163,20 @@ class InfoDataController {
         }
     }
 
+    def downloadFile(InfoData infoDataInstance) {
+        def list = []
+        if (infoDataInstance != null) {
+            def c = InfoFile.where {
+                infoData == infoDataInstance
+            }
+            c.list().each {
+                data ->
+                    list.add(data.id)
+            }
+        }
+        render(contentType: "text/json") { list }
+    }
+
     @Transactional
     def delete(InfoData infoDataInstance) {
 
@@ -139,16 +184,14 @@ class InfoDataController {
             notFound()
             return
         }
-
-        infoDataInstance.delete flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'InfoData.label', default: 'InfoData'), infoDataInstance.id])
-                redirect action: "index", method: "GET"
-            }
-            '*' { render status: NO_CONTENT }
+        String info = "true"
+        try {
+            infoDataInstance.delete flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
+        render info
     }
 
     protected void notFound() {

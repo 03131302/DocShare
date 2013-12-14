@@ -1,14 +1,11 @@
 package com.ocse.doc.domain
 
-
+import grails.transaction.Transactional
 
 import static org.springframework.http.HttpStatus.*
-import grails.transaction.Transactional
 
 @Transactional(readOnly = true)
 class RecipientController {
-
-    static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -25,25 +22,14 @@ class RecipientController {
 
     @Transactional
     def save(Recipient recipientInstance) {
-        if (recipientInstance == null) {
-            notFound()
-            return
+        String info = "true"
+        try {
+            recipientInstance.save flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
-
-        if (recipientInstance.hasErrors()) {
-            respond recipientInstance.errors, view: 'create'
-            return
-        }
-
-        recipientInstance.save flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.created.message', args: [message(code: 'recipientInstance.label', default: 'Recipient'), recipientInstance.id])
-                redirect recipientInstance
-            }
-            '*' { respond recipientInstance, [status: CREATED] }
-        }
+        render info
     }
 
     def edit(Recipient recipientInstance) {
@@ -75,21 +61,17 @@ class RecipientController {
 
     @Transactional
     def delete(Recipient recipientInstance) {
-
-        if (recipientInstance == null) {
-            notFound()
-            return
-        }
-
-        recipientInstance.delete flush: true
-
-        request.withFormat {
-            form {
-                flash.message = message(code: 'default.deleted.message', args: [message(code: 'Recipient.label', default: 'Recipient'), recipientInstance.id])
-                redirect action: "index", method: "GET"
+        String info = "true"
+        try {
+            if (recipientInstance.text.isInteger() && InfoData.get(recipientInstance.text) != null) {
+                InfoData.get(recipientInstance.text).delete flush: true
             }
-            '*' { render status: NO_CONTENT }
+            recipientInstance.delete flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
         }
+        render info
     }
 
     protected void notFound() {
