@@ -110,20 +110,20 @@ jcaptchas {
                             ),
                             new ComposedWordToImage(
                                     new RandomFontGenerator(
-                                            20, // min font size
+                                            30, // min font size
                                             30, // max font size
-                                            [new Font("Arial", 0, 10)] as Font[]
+                                            [new Font("Yahei Consolas Hybrid", 0, 10)] as Font[]
                                     ),
                                     new GradientBackgroundGenerator(
                                             140, // width
                                             35, // height
-                                            new SingleColorGenerator(new Color(0, 60, 0)),
-                                            new SingleColorGenerator(new Color(20, 20, 20))
+                                            new SingleColorGenerator(new Color(6, 4, 60)),
+                                            new SingleColorGenerator(new Color(6, 4, 60))
                                     ),
                                     new NonLinearTextPaster(
-                                            6, // minimal length of text
-                                            6, // maximal length of text
-                                            new Color(0, 255, 0)
+                                            5, // minimal length of text
+                                            5, // maximal length of text
+                                            new Color(255, 255, 255)
                                     )
                             )
                     )
