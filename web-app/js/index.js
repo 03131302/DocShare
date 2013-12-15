@@ -3,6 +3,7 @@ if (typeof jQuery !== 'undefined') {
         initTree();
     })(jQuery);
 }
+
 function initTree() {
     var setting = {
         data: {
@@ -39,6 +40,25 @@ function submitFile(id) {
 function submitText(id) {
     $("#infoData").val(id);
     $('#infoNewreTypeModal').modal('show');
+}
+
+function showOnLine(id) {
+    $.ajax({
+        type: "GET",
+        url: getLocation() + "infoData/downloadFile",
+        cache: false,
+        async: false,
+        data: {id: id, date: new Date()},
+        success: function (responseText) {
+            if (responseText && responseText.length == 1) {
+                $.each(responseText, function (i, n) {
+                    window.open(getLocation() + "infoFile/showOnLine/" + n);
+                });
+            } else {
+                document.location = getLocation() + "infoData/show/" + id;
+            }
+        }
+    });
 }
 
 function downloadFile(id) {

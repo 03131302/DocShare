@@ -2,7 +2,8 @@ package com.ocse.doc.domain
 
 import grails.transaction.Transactional
 
-import static org.springframework.http.HttpStatus.*
+import static org.springframework.http.HttpStatus.NOT_FOUND
+import static org.springframework.http.HttpStatus.OK
 
 @Transactional(readOnly = true)
 class RecipientController {
@@ -25,6 +26,14 @@ class RecipientController {
         String info = "true"
         try {
             recipientInstance.save flush: true
+            //日志记录
+            try {
+                InfoLog infoLog = new InfoLog(infoData: recipientInstance.infoData, user: session["adminUser"], infoDate: new Date()
+                        , ip: request.getRemoteAddr(), type: "反馈")
+                infoLog.save flush: true
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
         } catch (Exception e) {
             e.printStackTrace()
             info = e.getMessage()

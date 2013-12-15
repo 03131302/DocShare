@@ -8,8 +8,8 @@
 </head>
 
 <body>
-<div class="container" style="width: 100%;margin: 15px 0px;0px;0px;">
-    <div class="row col-md-12" style="width: 100%;margin: 0px 0px;0px;0px;">
+<div class="container" style="width: 100%;margin: 15px 0px 0px 0px;">
+    <div class="row col-md-12" style="width: 100%;margin: 0px 0px 0px 0px;">
         <div class="col-md-2" style="padding-left: 5px;">
             <div class="row">
                 <g:include view="wellcome.gsp"></g:include>
@@ -60,8 +60,7 @@
                                                         title="${data.title}" controller="infoData"
                                                         action="show"
                                                         params="${[id: data.id]}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}
-                                                    <span
-                                                            class="badge pull-right">未读</span></g:link>
+                                                </g:link>
                                             </td>
                                             <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
                                             <td style="width: 90px;">
@@ -69,7 +68,8 @@
                                                     <div class="col-md-4">
                                                         <img src="${resource(dir: "images", file: "yulan.png")}"
                                                              height="18"
-                                                             width="18" title="预览" style="cursor: pointer;">
+                                                             width="18" title="预览" onclick="showOnLine('${data.id}')"
+                                                             style="cursor: pointer;">
                                                     </div>
 
                                                     <div class="col-md-4">
@@ -148,17 +148,26 @@
                                     <g:each in="${recveList}" var="data" status="n">
                                         <tr>
                                             <td style="width: 30px;text-align: center;">${n + 1}</td>
-                                            <td><g:link name="${data.title}"
+                                            <td>
+                                                <g:link name="${data.title}"
                                                         title="${data.title}" controller="infoData"
                                                         action="show"
-                                                        params="${[id: data.id]}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}</g:link></td>
+                                                        params="${[id: data.id]}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}
+                                                    <g:if test="${data.log <= 0}">
+                                                        <span
+                                                                class="badge pull-right">未读</span>
+                                                    </g:if>
+                                                </g:link>
+                                            </td>
                                             <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
                                             <td style="width: 90px;">
                                                 <div class="row" style="width: 90px;">
                                                     <div class="col-md-4">
                                                         <img src="${resource(dir: "images", file: "yulan.png")}"
                                                              height="18"
-                                                             width="18" title="预览" style="cursor: pointer;">
+                                                             width="18" title="预览"
+                                                             onclick="showOnLine('${data.id}')"
+                                                             style="cursor: pointer;">
                                                     </div>
 
                                                     <div class="col-md-4">
@@ -249,9 +258,16 @@
                                 <g:each in="${allList}" var="data" status="n">
                                     <tr>
                                         <td style="width: 40px;text-align: center;">${n + 1}</td>
-                                        <td><g:link name="${data.title}"
+                                        <td>
+                                            <g:link name="${data.title}"
                                                     title="${data.title}" controller="infoData" action="show"
-                                                    params="${[id: data.id]}">${data.title.length() > 30 ? data.title.substring(0, 30) + "..." : data.title}</g:link></td>
+                                                    params="${[id: data.id]}">${data.title.length() > 30 ? data.title.substring(0, 30) + "..." : data.title}
+                                                <g:if test="${data.log <= 0}">
+                                                    <span
+                                                            class="badge pull-right">未读</span>
+                                                </g:if>
+                                            </g:link>
+                                        </td>
                                         <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
                                         <td>${data.type}</td>
                                         <td>${data.user}</td>
@@ -261,7 +277,9 @@
                                                 <div class="col-md-4">
                                                     <img src="${resource(dir: "images", file: "yulan.png")}"
                                                          height="18"
-                                                         width="18" title="预览" style="cursor: pointer;">
+                                                         width="18" title="预览"
+                                                         onclick="showOnLine('${data.id}')"
+                                                         style="cursor: pointer;">
                                                 </div>
 
                                                 <div class="col-md-4">

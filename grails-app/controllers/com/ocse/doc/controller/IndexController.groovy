@@ -1,7 +1,6 @@
 package com.ocse.doc.controller
 
 import com.ocse.doc.domain.InfoData
-import com.ocse.doc.domain.InfoUserScope
 import groovy.sql.Sql
 
 class IndexController {
@@ -50,10 +49,13 @@ class IndexController {
                                 FROM [DocManage].[dbo].[admin_user] where [id]=[user_id]) [user]
                                   ,[text_data]
                                   ,[re_type]
-                              FROM [DocManage].[dbo].[info_data] where [share_type]='全部' order by [save_date] desc""") {
+                                  ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=t.[id] and m.[user_id]=${
+            session["adminUser"].id
+        }) log
+                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' order by t.[save_date] desc""") {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
-                        re_type: data.re_type, user: data.user, shareScope: data.share_scope]
+                        re_type: data.re_type, user: data.user, shareScope: data.share_scope, log: data.log]
                 allList.add(map)
         }
 
@@ -72,13 +74,16 @@ class IndexController {
                                 FROM [DocManage].[dbo].[admin_user] where [id]=b.[user_id]) [user]
                                 ,[text_data]
                                 ,[re_type]
+                                ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=b.[id] and m.[user_id]=${
+            session["adminUser"].id
+        }) log
                                   FROM [DocManage].[dbo].[info_user_scope] a,[DocManage].[dbo].[info_data] b where
                                   b.id=a.info_id and a.[user_id]='${
             session["adminUser"].id
         }' order by [save_date] desc""") {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
-                        re_type: data.re_type, user: data.user]
+                        re_type: data.re_type, user: data.user, log: data.log]
                 recveList.add(map)
         }
         render view: "index", model: [sendList: sendList, allList: allList, recveList: recveList]
@@ -170,8 +175,8 @@ class IndexController {
                         " and  o.user.id='${session["adminUser"].id}'")
                 results.each { data ->
                     data.each {
-                        d->
-                            if(d instanceof InfoData){
+                        d ->
+                            if (d instanceof InfoData) {
                                 theData.add(d)
                             }
                     }

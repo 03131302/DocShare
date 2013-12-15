@@ -66,7 +66,9 @@
                                                     <div class="col-md-4">
                                                         <img src="${resource(dir: "images", file: "yulan.png")}"
                                                              height="18"
-                                                             width="18" title="预览" style="cursor: pointer;">
+                                                             width="18" title="预览"
+                                                             onclick="showOnLine('${data.id}')"
+                                                             style="cursor: pointer;">
                                                     </div>
 
                                                     <div class="col-md-4">

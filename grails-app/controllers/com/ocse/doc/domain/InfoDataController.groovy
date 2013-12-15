@@ -4,7 +4,6 @@ import grails.transaction.Transactional
 import groovy.sql.Sql
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
-import static org.springframework.http.HttpStatus.OK
 
 @Transactional(readOnly = true)
 class InfoDataController {
@@ -39,6 +38,14 @@ class InfoDataController {
         }
         def c = Recipient.where {
             infoData == infoDataInstance
+        }
+        //日志记录
+        try {
+            InfoLog infoLog = new InfoLog(infoData: infoDataInstance, user: session["adminUser"], infoDate: new Date()
+                    , ip: request.getRemoteAddr(), type: "浏览")
+            infoLog.save flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
         }
         render view: "show", model: [infoDataInstance: infoDataInstance, users: users,
                 fileList: fileList, reTypeList: c.list()]
@@ -114,11 +121,17 @@ class InfoDataController {
                     }
                 }
                 if (params.infoDataObject != null && !params.infoDataObject.empty) {
-                    println InfoData.get(params.infoDataObject)
                     Recipient recipient = new Recipient(user: session["adminUser"], infoData: InfoData.get(params.infoDataObject),
                             text: infoData.id)
-                    println recipient
                     recipient.save flash: true
+                    //日志记录
+                    try {
+                        InfoLog infoLog = new InfoLog(infoData: InfoData.get(params.infoDataObject), user: session["adminUser"], infoDate: new Date()
+                                , ip: request.getRemoteAddr(), type: "反馈")
+                        infoLog.save flush: true
+                    } catch (Exception e) {
+                        e.printStackTrace()
+                    }
                 }
                 InfoLog infoLog = new InfoLog()
                 infoLog.infoData = infoData
@@ -162,7 +175,6 @@ class InfoDataController {
     @Transactional
     def update(InfoData infoDataInstance) {
         InfoData infoData = infoDataInstance
-        println infoData
         infoData.saveDate = new Date()
         infoData.saveState = "修改"
         String info = "true"
@@ -207,8 +219,16 @@ class InfoDataController {
                 if (params.infoDataObject != null && !params.infoDataObject.empty) {
                     Recipient recipient = new Recipient(user: session["adminUser"], infoData: InfoData.get(params.infoDataObject),
                             text: infoData.id)
-                    println recipient
                     recipient.save flash: true
+                    //日志记录
+                    try {
+                        InfoLog infoLog = new InfoLog(infoData: InfoData.get(params.infoDataObject), user: session["adminUser"], infoDate: new Date()
+                                , ip: request.getRemoteAddr(), type: "反馈")
+                        infoLog.save flush: true
+                    } catch (Exception e) {
+                        e.printStackTrace()
+                    }
+
                 }
                 InfoLog infoLog = new InfoLog()
                 infoLog.infoData = infoData
@@ -236,6 +256,14 @@ class InfoDataController {
                     list.add(data.id)
             }
         }
+        //日志记录
+        try {
+            InfoLog infoLog = new InfoLog(infoData: infoDataInstance, user: session["adminUser"], infoDate: new Date()
+                    , ip: request.getRemoteAddr(), type: "文件下载")
+            infoLog.save flush: true
+        } catch (Exception e) {
+            e.printStackTrace()
+        }
         render(contentType: "text/json") { list }
     }
 
@@ -249,6 +277,14 @@ class InfoDataController {
         String info = "true"
         try {
             infoDataInstance.delete flush: true
+            //日志记录
+            try {
+                InfoLog infoLog = new InfoLog(infoData: infoDataInstance, user: session["adminUser"], infoDate: new Date()
+                        , ip: request.getRemoteAddr(), type: "删除")
+                infoLog.save flush: true
+            } catch (Exception e) {
+                e.printStackTrace()
+            }
         } catch (Exception e) {
             e.printStackTrace()
             info = e.getMessage()

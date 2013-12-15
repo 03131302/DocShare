@@ -1,5 +1,6 @@
 package com.ocse.doc.domain
 
+import com.ocse.doc.OpenOfficeTool
 import grails.transaction.Transactional
 
 import java.text.SimpleDateFormat
@@ -9,9 +10,86 @@ import static org.springframework.http.HttpStatus.*
 @Transactional(readOnly = true)
 class InfoFileController {
 
+    def fileFormatList = ["pdf", "jpg", "gif", "png", "zip", "rar", "bmp", "exe", "swf", "chm", "7z", "js",
+            "xml", "trg", "sql"]
+
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
         respond InfoFile.list(params), model: [infoFileInstanceCount: InfoFile.count()]
+    }
+
+    def line(InfoFile infoFileInstance) {
+        response.reset();
+        def name = URLEncoder.encode(infoFileInstance.name, "UTF-8");
+        response.setHeader("Content-disposition", "attachment; filename=help.swf")
+        response.contentType = "application/x-rarx-rar-compressed"
+        def webRootDir = servletContext.getRealPath("/") + "upLoad/" + infoFileInstance.path.decodeURL()
+        String ext = webRootDir.substring(webRootDir.lastIndexOf(".") + 1, webRootDir.length()).toLowerCase()
+        def userDir
+        if (!fileFormatList.contains(ext)) {
+            userDir = new File("${webRootDir}.pdf.swf")
+        } else {
+            userDir = new File("${webRootDir}.swf")
+        }
+        def out = response.outputStream
+        def inputStream = new FileInputStream(userDir)
+        try {
+            byte[] buffer = new byte[1024]
+            int i = -1
+            while ((i = inputStream.read(buffer)) != -1) {
+                out.write(buffer, 0, i)
+            }
+            out.flush()
+        } catch (Exception e) {
+            e.printStackTrace()
+        } finally {
+            if (out != null) {
+                out.close()
+            }
+            if (inputStream != null) {
+                inputStream.close()
+            }
+        }
+    }
+
+    def showOnLine(InfoFile infoFileInstance) {
+        String pathData = ""
+        if (infoFileInstance != null) {
+            String path = infoFileInstance.path
+            if (path != null && !path.empty) {
+                def webRootDir = servletContext.getRealPath("/") + "upLoad" + path.decodeURL()
+                def office = grailsApplication.config.OpenOfficeTool.path
+                def swfTools = grailsApplication.config.SWFTools.path
+                OpenOfficeTool.startOffice(office.toString())
+                String ext = webRootDir.substring(webRootDir.lastIndexOf(".") + 1, webRootDir.length()).toLowerCase()
+                File pdf = new File(webRootDir)
+                if (!fileFormatList.contains(ext)) {
+                    pdf = OpenOfficeTool.file2PDF(webRootDir, webRootDir + ".pdf")
+                }
+                if (pdf.exists()) {
+                    OpenOfficeTool.pdf2swf(swfTools, pdf.absolutePath, pdf.absolutePath + ".swf")
+                }
+                //日志记录
+                try {
+                    InfoLog infoLog = new InfoLog(infoData: infoFileInstance.infoData,
+                            user: session["adminUser"], infoDate: new Date()
+                            , ip: request.getRemoteAddr(), type: "在线浏览")
+                    infoLog.save flush: true
+                } catch (Exception e) {
+                    e.printStackTrace()
+                }
+                File swf = new File(pdf.absolutePath + ".swf")
+                if (swf.exists()) {
+                    pathData = "upLoad/" + path.decodeURL() + ".pdf.swf"
+                    render view: "index", model: [path: pathData, infoFileInstance: infoFileInstance]
+                    return false
+                } else {
+                    respond(controller: "infoFile", action: show(infoFileInstance))
+                    return false
+                }
+            }
+        }
+        render view: "index", model: [path: pathData, infoFileInstance: infoFileInstance]
     }
 
     def show(InfoFile infoFileInstance) {

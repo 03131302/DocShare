@@ -67,7 +67,9 @@
                                                     <div class="col-md-4">
                                                         <img src="${resource(dir: "images", file: "yulan.png")}"
                                                              height="18"
-                                                             width="18" title="预览" style="cursor: pointer;">
+                                                             width="18" title="预览"
+                                                             onclick="showOnLine('${data.id}')"
+                                                             style="cursor: pointer;">
                                                     </div>
 
                                                     <div class="col-md-4">
@@ -85,14 +87,49 @@
                                                                     data-toggle="dropdown" style="cursor: pointer;">
                                                             <ul class="dropdown-menu" role="menu"
                                                                 aria-labelledby="dropdownMenu1">
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                           href="#">删除</a></li>
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                           href="#">修改</a>
+                                                                <li role="presentation" ${session["adminUser"]?.userName?.equals(data.user) ? "" : raw("class=\"disabled\"")}>
+                                                                    <a role="menuitem" tabindex="-1"
+                                                                       onclick="deleteInfoData('${data.id}')"
+                                                                       href="javascript:void(0);">删除</a>
+                                                                </li>
+                                                                <li role="presentation" ${session["adminUser"]?.userName?.equals(data.user) ? "" : raw("class=\"disabled\"")}>
+                                                                    <a role="menuitem" tabindex="-1"
+                                                                       href="javascript:void(0);"
+                                                                       onclick="updateInfoNew('${data.id}')">修改</a>
                                                                 </li>
                                                                 <li role="presentation" class="divider"></li>
-                                                                <li role="presentation"><a role="menuitem" tabindex="-1"
-                                                                                           href="#">查看详细</a>
+                                                                <g:set var="theType" value="-1"></g:set>
+                                                                <g:if test="${data?.re_type != null}">
+                                                                    <g:if test="${"文件提交反馈".equals(data?.re_type)}">
+                                                                        <g:set var="theType" value="0"></g:set>
+                                                                    </g:if>
+                                                                    <g:if test="${"查收回执".equals(data?.re_type)}">
+                                                                        <g:set var="theType" value="1"></g:set>
+                                                                    </g:if>
+                                                                </g:if>
+                                                                <li role="presentation" ${theType.equals("0") ? "" : raw("class=\"disabled\"")}>
+                                                                    <a role="menuitem" tabindex="-1"
+                                                                       href="javascript:void(0);"
+                                                                       onclick="submitFile('${data.id}')"
+                                                                       data-toggle="modal"
+                                                                       data-target="#infoNewModal">提交文件</a>
+                                                                </li>
+                                                                <li role="presentation" ${theType.equals("1") ? "" : raw("class=\"disabled\"")}>
+                                                                    <a role="menuitem" tabindex="-1"
+                                                                       href="javascript:void(0);"
+                                                                       onclick="submitText('${data.id}')"
+                                                                       data-toggle="modal"
+                                                                       data-target="#infoNewreTypeModal">提交回执
+                                                                    </a>
+                                                                </li>
+                                                                <li role="presentation" class="divider"></li>
+                                                                <li role="presentation">
+                                                                    <g:link name="${data.title}"
+                                                                            title="${data.title}" controller="infoData"
+                                                                            action="show"
+                                                                            params="${[id: data.id]}" role="menuitem"
+                                                                            tabindex="-1">查看详细
+                                                                    </g:link>
                                                                 </li>
                                                             </ul>
                                                         </div>
