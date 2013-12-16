@@ -14,7 +14,16 @@ function initTree() {
         callback: {
             onClick: function (event, treeId, treeNode) {
                 var pid = treeNode.id;
-                alert(pid);
+                var location = document.location.toString()
+                if (location.indexOf("?") >= 0) {
+                    if (hasParameter("orgID")) {
+                        document.location = replaceParamVal(location, "orgID", pid);
+                    } else {
+                        document.location = location + "&orgID=" + pid;
+                    }
+                } else {
+                    document.location = location + "?orgID=" + pid;
+                }
             }
         }
     };
@@ -30,6 +39,18 @@ function initTree() {
             zTree.expandAll(true);
         }
     });
+}
+
+function replaceParamVal(oldUrl, paramName, replaceWith) {
+    var re = eval('/(' + paramName + '=)([^&]*)/gi');
+    var nUrl = oldUrl.replace(re, paramName + '=' + replaceWith);
+    return nUrl;
+}
+function hasParameter(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]);
+    return null;
 }
 
 function submitFile(id) {

@@ -1,6 +1,7 @@
 package com.ocse.doc.controller
 
 import com.ocse.doc.domain.InfoData
+import com.ocse.doc.domain.Organization
 import groovy.sql.Sql
 
 class IndexController {
@@ -14,7 +15,8 @@ class IndexController {
         }
         Sql sql = new Sql(dataSource: dataSource)
         def sendList = []
-        sql.eachRow("""
+
+        def sendListSQL = """
                     SELECT TOP 5 [id]
                           ,[version]
                           ,[save_date]
@@ -27,16 +29,17 @@ class IndexController {
                           ,[user_id]
                           ,[text_data]
                           ,[re_type]
-                      FROM [DocManage].[dbo].[info_data] where [user_id]='${
+                      FROM [DocManage].[dbo].[info_data] where [user_id]=${
             session["adminUser"].id
-        }' and [state]=0 order by [save_date] desc""") {
+        } and [state]=0 order by [save_date] desc"""
+        sql.eachRow(sendListSQL) {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type]
                 sendList.add(map)
         }
         def allList = []
-        sql.eachRow("""
-                    SELECT TOP 20 [id]
+        def allListSQL = """
+                         SELECT TOP 20 [id]
                                   ,[version]
                                   ,[save_date]
                                   ,[save_state]
@@ -52,7 +55,40 @@ class IndexController {
                                   ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=t.[id] and m.[user_id]=${
             session["adminUser"].id
         }) log
-                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [state]=0 order by t.[save_date] desc""") {
+                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [state]=0 order by t.[save_date] desc"""
+        if (params.orgID != null && !params.orgID.empty) {
+            allListSQL = """
+                        WITH orgtree([id],[name],[parent_id],[pxh]) as
+                        (
+                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${
+                params.orgID
+            }
+                        UNION ALL
+                        SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
+                        where a.parent_id = b.id
+                        )
+                         SELECT TOP 20 [id]
+                                  ,[version]
+                                  ,[save_date]
+                                  ,[save_state]
+                                  ,[share_scope]
+                                  ,[share_type]
+                                  ,[title]
+                                  ,(SELECT n.[name]
+                                FROM [DocManage].[dbo].[info_type] n where n.id=[type_id]) type
+                                 ,(SELECT [user_name]
+                                FROM [DocManage].[dbo].[admin_user] where [id]=[user_id]) [user]
+                                  ,[text_data]
+                                  ,[re_type]
+                                  ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=t.[id] and m.[user_id]=${
+                session["adminUser"].id
+            }) log
+                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [state]=0
+                              and t.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
+                              order by t.[save_date] desc"""
+        }
+        log.info(allListSQL)
+        sql.eachRow(allListSQL) {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
                         re_type: data.re_type, user: data.user, shareScope: data.share_scope, log: data.log]
@@ -60,7 +96,8 @@ class IndexController {
         }
 
         def recveList = []
-        sql.eachRow("""
+
+        def recveListSQL = """
                    SELECT TOP 5  b.[id]
                                 ,b.[version]
                                 ,[save_date]
@@ -80,13 +117,48 @@ class IndexController {
                                   FROM [DocManage].[dbo].[info_user_scope] a,[DocManage].[dbo].[info_data] b where
                                   b.id=a.info_id and a.[user_id]='${
             session["adminUser"].id
-        }' and [state]=0 order by [save_date] desc""") {
+        }' and [state]=0 order by [save_date] desc"""
+        if (params.orgID != null && !params.orgID.empty) {
+            recveListSQL = """
+                        WITH orgtree([id],[name],[parent_id],[pxh]) as
+                        (
+                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${
+                params.orgID
+            }
+                        UNION ALL
+                        SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
+                        where a.parent_id = b.id
+                        )
+                        SELECT TOP 5  b.[id]
+                                ,b.[version]
+                                ,[save_date]
+                                ,[save_state]
+                                ,[share_scope]
+                                ,[share_type]
+                                ,[title]
+                                ,(SELECT [name]
+                                FROM [DocManage].[dbo].[info_type] n where n.id=[type_id]) type
+                                ,(SELECT [user_name]
+                                FROM [DocManage].[dbo].[admin_user] where [id]=b.[user_id]) [user]
+                                ,[text_data]
+                                ,[re_type]
+                                ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=b.[id] and m.[user_id]=${
+                session["adminUser"].id
+            }) log
+                                  FROM [DocManage].[dbo].[info_user_scope] a,[DocManage].[dbo].[info_data] b where
+                                  b.id=a.info_id and a.[user_id]='${session["adminUser"].id}' and [state]=0
+                                 and b.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
+                                 order by [save_date] desc"""
+        }
+        log.info(recveListSQL)
+        sql.eachRow(recveListSQL) {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
                         re_type: data.re_type, user: data.user, log: data.log]
                 recveList.add(map)
         }
-        render view: "index", model: [sendList: sendList, allList: allList, recveList: recveList]
+        render view: "index", model: [sendList: sendList, allList: allList, recveList: recveList,
+                org: Organization.get(params.orgID)]
     }
 
     def search() {
@@ -111,7 +183,7 @@ class IndexController {
         if (keyValue != null && !keyValue.empty) {
             sqlText += " and ([title] like '%" + keyValue + "%' or [text_data] like '%" + keyValue + "%')"
         }
-        if (typeKey != null && !typeKey.empty) {
+        if (typeKey != null && !typeKey.empty && (params.orgID == null || params.orgID.empty)) {
             sqlText = "WITH orgtree([id],[name],[parent_info_type_id],[pxh]) as\n" +
                     "(\n" +
                     "SELECT [id],[name],[parent_info_type_id],[pxh] FROM [DocManage].[dbo].[info_type] WHERE id ='${typeKey}'\n" +
@@ -119,6 +191,40 @@ class IndexController {
                     "SELECT a.[id],a.[name],a.[parent_info_type_id],a.[pxh] FROM [DocManage].[dbo].[info_type] A,orgtree b\n" +
                     "where a.parent_info_type_id = b.id\n" +
                     ") \n" + sqlText + " and [type_id] in (SELECT id  from orgtree) "
+        }
+        if (params.orgID != null && !params.orgID.empty && (typeKey != null && !typeKey.empty)) {
+            sqlText = """
+                        WITH orgtree([id],[name],[parent_id],[pxh]) as
+                        (
+                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${params.orgID}
+                        UNION ALL
+                        SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
+                        where a.parent_id = b.id
+                        ),
+                        infotypetree([id],[name],[parent_info_type_id],[pxh]) as
+                        (
+                        SELECT [id],[name],[parent_info_type_id],[pxh] FROM [DocManage].[dbo].[info_type] WHERE id =${typeKey}
+                        UNION ALL
+                        SELECT a.[id],a.[name],a.[parent_info_type_id],a.[pxh] FROM [DocManage].[dbo].[info_type] A,infotypetree b
+                        where a.parent_info_type_id = b.id
+                        )
+                        ${sqlText}
+                        and b.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
+                        and [type_id] in (SELECT id  from infotypetree)
+                        """
+        }
+        if (params.orgID != null && !params.orgID.empty && (typeKey == null || typeKey.empty)) {
+            sqlText = """
+                        WITH orgtree([id],[name],[parent_id],[pxh]) as
+                        (
+                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${params.orgID}
+                        UNION ALL
+                        SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
+                        where a.parent_id = b.id
+                        )
+                        ${sqlText}
+                        and b.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
+                        """
         }
         log.info(sqlText)
         sql.eachRow(sqlText + " order by [save_date] desc") {
@@ -128,7 +234,7 @@ class IndexController {
                 searchList.add(map)
         }
         render view: "search", model: [keyValue: params.keyValue, searchList: searchList, typeKey: params.typeKey,
-                typeKeyName: params.typeKeyName]
+                typeKeyName: params.typeKeyName, org: Organization.get(params.orgID)]
     }
 
     def getOrgTreeData() {

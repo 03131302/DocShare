@@ -1,5 +1,8 @@
+<g:if test="${org != null}">
+    <div class="alert alert-info">当前信息所属单位：${org.name}</div>
+</g:if>
 <nav class="navbar navbar-default" role="navigation" style="margin-bottom: 5px;">
-    <g:form controller="index" action="search" name="search" class="navbar-form navbar-left" role="search">
+    <g:form controller="index" action="search" name="search" class="navbar-form navbar-left" role="search" method="get">
         <div class="form-group">
             <input type="hidden" name="typeKey" id="typeKey" value="${typeKey}">
             <input type="hidden" name="typeKeyName" id="typeKeyName" value="${typeKeyName}">
