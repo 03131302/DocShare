@@ -29,7 +29,7 @@ class IndexController {
                           ,[re_type]
                       FROM [DocManage].[dbo].[info_data] where [user_id]='${
             session["adminUser"].id
-        }' order by [save_date] desc""") {
+        }' and [state]=0 order by [save_date] desc""") {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type]
                 sendList.add(map)
@@ -52,7 +52,7 @@ class IndexController {
                                   ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=t.[id] and m.[user_id]=${
             session["adminUser"].id
         }) log
-                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' order by t.[save_date] desc""") {
+                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [state]=0 order by t.[save_date] desc""") {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
                         re_type: data.re_type, user: data.user, shareScope: data.share_scope, log: data.log]
@@ -80,7 +80,7 @@ class IndexController {
                                   FROM [DocManage].[dbo].[info_user_scope] a,[DocManage].[dbo].[info_data] b where
                                   b.id=a.info_id and a.[user_id]='${
             session["adminUser"].id
-        }' order by [save_date] desc""") {
+        }' and [state]=0 order by [save_date] desc""") {
             data ->
                 def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
                         re_type: data.re_type, user: data.user, log: data.log]
@@ -106,7 +106,7 @@ class IndexController {
                 "   FROM [DocManage].[dbo].[admin_user] where [id]=b.[user_id]) [user]\n" +
                 "   ,[text_data]\n" +
                 "   ,[re_type]\n" +
-                "  FROM [DocManage].[dbo].[info_data] b where 1=1 "
+                "  FROM [DocManage].[dbo].[info_data] b where 1=1 and [state]=0 "
         Sql sql = new Sql(dataSource: dataSource)
         if (keyValue != null && !keyValue.empty) {
             sqlText += " and ([title] like '%" + keyValue + "%' or [text_data] like '%" + keyValue + "%')"
@@ -155,7 +155,7 @@ class IndexController {
         switch (params.theType) {
             case "1":
                 def results = InfoData.where {
-                    user == session["adminUser"]
+                    user == session["adminUser"] && state == 0
                 }
                 params.sort = "saveDate"
                 params.order = "desc"
@@ -170,8 +170,8 @@ class IndexController {
                 params.order = "desc"
                 def theData = []
                 def results = InfoData.findAll("from InfoData d,InfoUserScope o where o.info=d " +
-                        " and  o.user.id=${session["adminUser"].id} order by d.saveDate desc", [max: params.max, offset: params.offset])
-                def o = InfoData.executeQuery("select count(d.id) from InfoUserScope o,InfoData d where o.info=d " +
+                        " and  o.user.id=${session["adminUser"].id} and d.state = 0 order by d.saveDate desc", [max: params.max, offset: params.offset])
+                def o = InfoData.executeQuery("select count(d.id) from InfoUserScope o,InfoData d where o.info=d and d.state = 0 " +
                         " and  o.user.id='${session["adminUser"].id}'")
                 results.each { data ->
                     data.each {
@@ -186,7 +186,7 @@ class IndexController {
                 break
             case "3":
                 def results = InfoData.where {
-                    shareType == "全部"
+                    shareType == "全部" && state == 0
                 }
                 params.sort = "saveDate"
                 params.order = "desc"

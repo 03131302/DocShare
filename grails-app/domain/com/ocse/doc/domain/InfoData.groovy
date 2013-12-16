@@ -9,6 +9,7 @@ class InfoData {
     static belongsTo = [type: InfoType, user: AdminUser]
     static mapping = {
         textData sqlType: 'text'
+        state defaultValue: 0
     }
 
     String title
@@ -18,9 +19,18 @@ class InfoData {
     Date saveDate
     String shareType
     String reType
+    int state
 
     String getReType() {
         return reType
+    }
+
+    int getState() {
+        return state
+    }
+
+    void setState(int state) {
+        this.state = state
     }
 
     void setReType(String reType) {
@@ -87,6 +97,7 @@ class InfoData {
                 ", saveDate=" + saveDate +
                 ", shareType='" + shareType + '\'' +
                 ", reType='" + reType + '\'' +
+                ", state=" + state +
                 ", version=" + version +
                 '}';
     }

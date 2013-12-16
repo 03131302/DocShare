@@ -30,7 +30,7 @@ class ManageController {
     }
 
     def userManageIndex(Integer max) {
-        params.max = Math.min(max ?: 20, 100)
+        params.max = Math.min(max ?: 30, 100)
         render view: "userManageIndex", model: [users: AdminUser.list(params), adminUserInstanceCount: AdminUser.count()]
     }
 

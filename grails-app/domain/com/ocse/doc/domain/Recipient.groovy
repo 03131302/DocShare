@@ -7,6 +7,11 @@ class Recipient {
 
     static belongsTo = [infoData: InfoData, user: AdminUser]
 
+    static mapping = {
+        infoData ignoreNotFound: true
+        user ignoreNotFound: true
+    }
+
     String text
 
     String getText() {

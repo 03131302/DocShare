@@ -77,7 +77,7 @@
                         </tr>
                         <g:each in="${reTypeList}" var="typeData" status="n">
                             <tr>
-                                <td style="text-align: center;"><strong>${n+1}</strong></td>
+                                <td style="text-align: center;"><strong>${n + 1}</strong></td>
                                 <td><strong>反馈人：</strong></td>
                                 <td>${typeData.user.userName}</td>
                                 <td><strong>反馈人内容：</strong></td>
@@ -89,9 +89,10 @@
                                     <td colspan="1">${typeData.text}</td>
                                 </g:else>
                                 <td>
-                                    <button type="button" class="btn btn-primary"
+                                    <button ${(typeData.user.id == session["adminUser"].id || "管理员".equals(session["adminUser"].jb)) ? "" : "disabled"}
+                                            type="button" class="btn btn-primary"
                                             onclick="deleteReType('${typeData.id}')"><span
-                                            class="glyphicon glyphicon-trash" ${typeData.user.id == session["adminUser"].id ? "" : "disabled"}></span> 删除
+                                            class="glyphicon glyphicon-trash"></span> 删除
                                     </button>
                                 </td>
                             </tr>

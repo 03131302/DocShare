@@ -18,7 +18,7 @@
                         <a class="navbar-brand" href="javascript:void(0);">系统登陆日志</a>
                     </div>
                     <button type="button" class="btn btn-primary navbar-btn" onclick="cleanAll()">
-                        <span class="glyphicon glyphicon-plus-sign"></span> 清空日志</button>
+                        <span class="glyphicon glyphicon-fire"></span> 清空日志</button>
                     <button type="button" class="btn btn-default navbar-btn" onclick="deleteLog()">
                         <span class="glyphicon glyphicon-trash"></span> 删除</button>
                 </nav>
@@ -26,8 +26,8 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>选择</th>
-                        <th>#</th>
+                        <th style="text-align: center;">选择</th>
+                        <th style="text-align: center;">#</th>
                         <th>用户名</th>
                         <th>登陆IP</th>
                         <th>登陆时间</th>
@@ -36,15 +36,15 @@
                     <tbody>
                     <g:each in="${logList}" var="log" status="n">
                         <tr>
-                            <td><input id="${log.id}" class="dataOracle" name="${log.id}" type="checkbox"
+                            <td style="text-align: center;"><input id="${log.id}" class="dataOracle" name="${log.id}" type="checkbox"
                                        value="${log.id}"></td>
-                            <td>${n + 1}</td>
+                            <td style="text-align: center;">${n + 1}</td>
                             <td>${log.user.userName}</td>
                             <td>${log.ip}</td>
                             <td>${log.loginDate}</td>
                         </tr>
                     </g:each>
-                    <g:if test="${loginLogInstanceCount > 20}">
+                    <g:if test="${loginLogInstanceCount > 30}">
                         <tr>
                             <td colspan="5" style="text-align: center;"><ul class="pagination">
                                 <ocse:paginate total="${loginLogInstanceCount}" params="${params}"/>

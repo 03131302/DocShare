@@ -29,7 +29,7 @@
                 <table class="table table-bordered table-hover">
                     <thead>
                     <tr>
-                        <th>选择</th>
+                        <th style="text-align: center;">选择</th>
                         <th>#</th>
                         <th>用户名</th>
                         <th>登陆名</th>
@@ -43,7 +43,7 @@
                     <tbody>
                     <g:each in="${users}" var="user" status="n">
                         <tr>
-                            <td><input id="${user.id}" class="dataOracle" name="${user.id}" type="checkbox"
+                            <td style="text-align: center;"><input id="${user.id}" class="dataOracle" name="${user.id}" type="checkbox"
                                        value="${user.id}"></td>
                             <td>${n + 1}</td>
                             <td>${user.userName}</td>
@@ -55,7 +55,7 @@
                             <td>${user.text}</td>
                         </tr>
                     </g:each>
-                    <g:if test="${adminUserInstanceCount > 20}">
+                    <g:if test="${adminUserInstanceCount > 30}">
                         <tr>
                             <td colspan="9" style="text-align: center;"><ul class="pagination">
                                 <ocse:paginate total="${adminUserInstanceCount}" params="${params}"/>

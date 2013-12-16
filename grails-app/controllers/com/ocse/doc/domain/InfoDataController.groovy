@@ -11,8 +11,50 @@ class InfoDataController {
     def dataSource
 
     def index(Integer max) {
-        params.max = Math.min(max ?: 10, 100)
-        respond InfoData.list(params), model: [infoDataInstanceCount: InfoData.count()]
+        params.max = Math.min(max ?: 30, 100)
+        params.sort = "saveDate"
+        params.order = "desc"
+        if (params.titleLikeValue == null) {
+            params.titleLikeValue = ""
+        }
+        def user = session["adminUser"]
+
+        def c = InfoData.where {
+            title ==~ "%${params.titleLikeValue.toString()}%" && state == 0
+        }
+        if ("普通用户".equals(user.jb)) {
+            c = c.where {
+                user == session["adminUser"]
+            }
+        }
+        render view: "index", model: [infoDataInstanceCount: InfoData.count(),
+                infoDataList: c.list(params), titleLikeValue: params.titleLikeValue]
+    }
+
+    def cleanAll() {
+        String info = "true"
+        Sql sql = new Sql(dataSource: dataSource)
+        try {
+            sql.execute("delete from [DocManage].[dbo].[info_data] where [state]=1")
+        } catch (Exception e) {
+            e.printStackTrace()
+            info = e.getMessage()
+        }
+        render info
+    }
+
+    def recycleIndex(Integer max) {
+        params.max = Math.min(max ?: 30, 100)
+        params.sort = "saveDate"
+        params.order = "desc"
+        if (params.titleLikeValue == null) {
+            params.titleLikeValue = ""
+        }
+        def c = InfoData.where {
+            title ==~ "%${params.titleLikeValue.toString()}%" && state == 1
+        }
+        render view: "recycleIndex", model: [infoDataInstanceCount: InfoData.count(),
+                infoDataList: c.list(params), titleLikeValue: params.titleLikeValue]
     }
 
     def show(InfoData infoDataInstance) {
@@ -83,6 +125,7 @@ class InfoDataController {
         infoData.saveDate = new Date()
         infoData.saveState = "保存"
         infoData.user = session["adminUser"]
+        infoData.state = 0
         String info = "true"
         if (infoData.hasErrors()) {
             info = "请检查填写内容！"
@@ -177,6 +220,7 @@ class InfoDataController {
         InfoData infoData = infoDataInstance
         infoData.saveDate = new Date()
         infoData.saveState = "修改"
+        infoData.state = 0
         String info = "true"
         if (infoData.hasErrors()) {
             info = "请检查填写内容！"
@@ -268,6 +312,82 @@ class InfoDataController {
     }
 
     @Transactional
+    def deleteInfo(String id) {
+        if (id == null) {
+            notFound()
+            return
+        }
+        String info = "true"
+        Sql sql = new Sql(dataSource: dataSource)
+        id.split(",").each {
+            data ->
+                try {
+                    //日志记录
+                    try {
+                        InfoLog infoLog = new InfoLog(infoData: InfoData.get(data), user: session["adminUser"], infoDate: new Date()
+                                , ip: request.getRemoteAddr(), type: "删除")
+                        infoLog.save flush: true
+                    } catch (Exception e) {
+                        e.printStackTrace()
+                    }
+                    sql.execute("delete from [DocManage].[dbo].[info_data] where id=${data}")
+                } catch (Exception e) {
+                    e.printStackTrace()
+                    info = e.getMessage()
+                }
+        }
+        render info
+    }
+
+    @Transactional
+    def deleteAll(String id) {
+        if (id == null) {
+            notFound()
+            return
+        }
+        String info = "true"
+        Sql sql = new Sql(dataSource: dataSource)
+        id.split(",").each {
+            data ->
+                try {
+                    //日志记录
+                    try {
+                        InfoLog infoLog = new InfoLog(infoData: InfoData.get(data), user: session["adminUser"], infoDate: new Date()
+                                , ip: request.getRemoteAddr(), type: "删除")
+                        infoLog.save flush: true
+                    } catch (Exception e) {
+                        e.printStackTrace()
+                    }
+                    sql.execute("update [DocManage].[dbo].[info_data] set [state]=1 where id=${data}")
+                } catch (Exception e) {
+                    e.printStackTrace()
+                    info = e.getMessage()
+                }
+        }
+        render info
+    }
+
+    @Transactional
+    def recover(String id) {
+        if (id == null) {
+            notFound()
+            return
+        }
+        String info = "true"
+        Sql sql = new Sql(dataSource: dataSource)
+        id.split(",").each {
+            data ->
+                try {
+                    sql.execute("update [DocManage].[dbo].[info_data] set [state]=0 where id=${data}")
+                } catch (Exception e) {
+                    e.printStackTrace()
+                    info = e.getMessage()
+                }
+        }
+        render info
+    }
+
+    @Transactional
     def delete(InfoData infoDataInstance) {
 
         if (infoDataInstance == null) {
@@ -276,7 +396,6 @@ class InfoDataController {
         }
         String info = "true"
         try {
-            infoDataInstance.delete flush: true
             //日志记录
             try {
                 InfoLog infoLog = new InfoLog(infoData: infoDataInstance, user: session["adminUser"], infoDate: new Date()
@@ -285,6 +404,8 @@ class InfoDataController {
             } catch (Exception e) {
                 e.printStackTrace()
             }
+            infoDataInstance.state = 1
+            infoDataInstance.save flush: true
         } catch (Exception e) {
             e.printStackTrace()
             info = e.getMessage()

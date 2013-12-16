@@ -1,7 +1,16 @@
+<g:set var="collapse0" value=""></g:set>
+<g:set var="collapse1" value=""></g:set>
+<g:if test="${controllerName == "manage" || controllerName == "loginLog"}">
+    <g:set var="collapse0" value="in"></g:set>
+    <g:set var="collapse1" value=""></g:set>
+</g:if>
+<g:else>
+    <g:set var=" collapse0" value=""></g:set>
+    <g:set var="collapse1" value="in"></g:set>
+</g:else>
 <div class="col-md-3" style="padding-left: 5px;">
     <div class="row">
         <g:include view="wellcome.gsp"></g:include>
-
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -13,11 +22,16 @@
                     </h4>
                 </div>
 
-                <div id="collapseOne" class="panel-collapse collapse in">
+                <div id="collapseOne" class="panel-collapse collapse ${collapse0}">
                     <div class="list-group" style="margin: 0 0 0 0">
-                        <g:link controller="manage" action="index" class="list-group-item">组织机构管理</g:link>
-                        <g:link controller="manage" action="userManageIndex" class="list-group-item">用户信息管理</g:link>
-                        <g:link controller="loginLog" action="index" class="list-group-item">登陆日志查看</g:link>
+                        <g:if test="${"管理员".equals(session["adminUser"].jb)}">
+                            <g:link controller="manage" action="index"
+                                    class="list-group-item ${(controllerName == "manage" && actionName == "index") ? "active" : ""}">组织机构管理</g:link>
+                            <g:link controller="manage" action="userManageIndex"
+                                    class="list-group-item ${(controllerName == "manage" && actionName == "userManageIndex") ? "active" : ""}">用户信息管理</g:link>
+                            <g:link controller="loginLog" action="index"
+                                    class="list-group-item ${(controllerName == "loginLog" && actionName == "index") ? "active" : ""}">登陆日志查看</g:link>
+                        </g:if>
                         <a href="javascript:void(0)" data-toggle="modal"
                            data-target="#myModalUpdatePassWord" class="list-group-item">本人密码修改</a>
                     </div>
@@ -34,12 +48,18 @@
                     </h4>
                 </div>
 
-                <div id="collapseTwo" class="panel-collapse collapse">
+                <div id="collapseTwo" class="panel-collapse collapse ${collapse1}">
                     <div class="list-group" style="margin: 0 0 0 0">
-                        <a href="#" class="list-group-item">共享信息管理</a>
-                        <a href="#" class="list-group-item">信息日志查看</a>
-                        <g:link controller="infoType" action="index" class="list-group-item">关键字管理</g:link>
-                        <a href="#" class="list-group-item">回收站信息管理</a>
+                        <g:link controller="infoData" action="index"
+                                class="list-group-item ${(controllerName == "infoData" && actionName == "index") ? "active" : ""}">共享信息管理</g:link>
+                        <g:if test="${"管理员".equals(session["adminUser"].jb)}">
+                            <g:link controller="infoLog" action="index"
+                                    class="list-group-item ${(controllerName == "infoLog" && actionName == "index") ? "active" : ""}">信息日志查看</g:link>
+                            <g:link controller="infoType" action="index"
+                                    class="list-group-item ${(controllerName == "infoType" && actionName == "index") ? "active" : ""}">关键字管理</g:link>
+                            <g:link controller="infoData" action="recycleIndex"
+                                    class="list-group-item ${(controllerName == "infoData" && actionName == "recycleIndex") ? "active" : ""}">回收站信息管理</g:link>
+                        </g:if>
                     </div>
                 </div>
             </div>

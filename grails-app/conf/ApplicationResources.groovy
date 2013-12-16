@@ -17,4 +17,10 @@ modules = {
     infoType {
         resource url: 'js/infoType.js'
     }
+    infoDataManage{
+        resource url: 'js/infoDataManage.js'
+    }
+    infoLog{
+        resource url: 'js/infoLog.js'
+    }
 }

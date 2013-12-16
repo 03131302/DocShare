@@ -9,6 +9,11 @@ class InfoLog {
 
     static belongsTo = [infoData: InfoData, user: AdminUser]
 
+    static mapping = {
+        infoData ignoreNotFound: true
+        user ignoreNotFound: true
+    }
+
     Date infoDate
     String type
     String ip

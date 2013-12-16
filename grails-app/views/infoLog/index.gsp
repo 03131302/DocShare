@@ -1,62 +1,79 @@
-
-<%@ page import="com.ocse.doc.domain.InfoLog" %>
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta name="layout" content="main">
-		<g:set var="entityName" value="${message(code: 'infoLog.label', default: 'InfoLog')}" />
-		<title><g:message code="default.list.label" args="[entityName]" /></title>
-	</head>
-	<body>
-		<a href="#list-infoLog" class="skip" tabindex="-1"><g:message code="default.link.skip.label" default="Skip to content&hellip;"/></a>
-		<div class="nav" role="navigation">
-			<ul>
-				<li><a class="home" href="${createLink(uri: '/')}"><g:message code="default.home.label"/></a></li>
-				<li><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></li>
-			</ul>
-		</div>
-		<div id="list-infoLog" class="content scaffold-list" role="main">
-			<h1><g:message code="default.list.label" args="[entityName]" /></h1>
-			<g:if test="${flash.message}">
-				<div class="message" role="status">${flash.message}</div>
-			</g:if>
-			<table>
-			<thead>
-					<tr>
-					
-						<g:sortableColumn property="ip" title="${message(code: 'infoLog.ip.label', default: 'Ip')}" />
-					
-						<g:sortableColumn property="type" title="${message(code: 'infoLog.type.label', default: 'Type')}" />
-					
-						<th><g:message code="infoLog.infoData.label" default="Info Data" /></th>
-					
-						<g:sortableColumn property="infoDate" title="${message(code: 'infoLog.infoDate.label', default: 'Info Date')}" />
-					
-						<th><g:message code="infoLog.user.label" default="User" /></th>
-					
-					</tr>
-				</thead>
-				<tbody>
-				<g:each in="${infoLogInstanceList}" status="i" var="infoLogInstance">
-					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
-						<td><g:link action="show" id="${infoLogInstance.id}">${fieldValue(bean: infoLogInstance, field: "ip")}</g:link></td>
-					
-						<td>${fieldValue(bean: infoLogInstance, field: "type")}</td>
-					
-						<td>${fieldValue(bean: infoLogInstance, field: "infoData")}</td>
-					
-						<td><g:formatDate date="${infoLogInstance.infoDate}" /></td>
-					
-						<td>${fieldValue(bean: infoLogInstance, field: "user")}</td>
-					
-					</tr>
-				</g:each>
-				</tbody>
-			</table>
-			<div class="pagination">
-				<g:paginate total="${infoLogInstanceCount ?: 0}" />
-			</div>
-		</div>
-	</body>
+<html lang="zh_CN">
+<head>
+    <meta name="layout" content="main"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>东营市环保局工作信息共享平台</title>
+</head>
+
+<body>
+<div class="container" style="width: 100%;margin: 15px 0px;0px;0px;">
+    <div class="row col-md-12" style="width: 100%;margin: 0px 0px;0px;0px;">
+        <g:include view="manage/manageLeft.gsp"></g:include>
+        <div class="col-md-9" style="padding-right: 0px;margin-right: 0px;">
+            <div class="panel panel-default">
+                <nav class="navbar navbar-default" role="navigation" style="margin-bottom: 2px;">
+                    <div class="navbar-header">
+                        <a class="navbar-brand" href="javascript:void(0);">信息日志查看</a>
+                    </div>
+                    <button type="button" class="btn btn-primary navbar-btn" onclick="cleanAll()">
+                        <span class="glyphicon glyphicon-fire"></span> 清空日志</button>
+                    <button type="button" class="btn btn-default navbar-btn" onclick="deleteLog()">
+                        <span class="glyphicon glyphicon-trash"></span> 删除</button>
+                </nav>
+
+                <table class="table table-striped table-condensed table-hover">
+                    <thead>
+                    <tr>
+                        <th style="text-align: center;">选择</th>
+                        <th style="text-align: center;">#</th>
+                        <th>用户名</th>
+                        <th>操作信息</th>
+                        <th>登陆IP</th>
+                        <th>登陆时间</th>
+                        <th>操作类型</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <g:each in="${logs}" var="data" status="n">
+                        <tr>
+                            <td style="text-align: center;"><input id="${data.id}" class="dataOracle" name="${data.id}"
+                                                                   type="checkbox"
+                                                                   value="${data.id}"></td>
+                            <td style="text-align: center;">${n + 1}</td>
+                            <td>${data.user.userName}</td>
+                            <td>
+                                <g:if test="${data.infoData != null}">
+                                    <g:link name="${data.infoData?.title}"
+                                            title="${data.infoData?.title}" controller="infoData"
+                                            action="show"
+                                            params="${[id: data.infoData?.id]}">
+                                        ${data.infoData?.title?.length() > 30 ? data.infoData?.title?.substring(0, 30) + "..." : data.infoData?.title}
+                                    </g:link>
+                                </g:if>
+                                <g:else>
+                                    [已删除]
+                                </g:else>
+                            </td>
+                            <td>${data.ip}</td>
+                            <td>${data.infoDate}</td>
+                            <td>${data.type}</td>
+                        </tr>
+                    </g:each>
+                    <g:if test="${infoLogInstanceCount > 30}">
+                        <tr>
+                            <td colspan="7" style="text-align: center;"><ul class="pagination">
+                                <ocse:paginate total="${infoLogInstanceCount}" params="${params}"/>
+                            </ul></td>
+                        </tr>
+                    </g:if>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<r:require module="infoLog"></r:require>
+</body>
 </html>

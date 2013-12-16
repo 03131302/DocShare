@@ -15,22 +15,23 @@
             <div class="panel panel-default">
                 <nav class="navbar navbar-default" role="navigation" style="margin-bottom: 2px;">
                     <div class="navbar-header">
-                        <a class="navbar-brand" href="javascript:void(0);">共享信息管理</a>
+                        <a class="navbar-brand" href="javascript:void(0);">回收站信息管理</a>
                     </div>
-                    <g:form controller="infoData" action="index" name="titleLike" class="navbar-form navbar-left" role="search" method="get">
+                    <g:form controller="infoData" action="recycleIndex" name="titleLike" class="navbar-form navbar-left"
+                            role="search" method="get">
                         <div class="form-group">
-                            <input id="titleLikeValue" name="titleLikeValue" type="text" class="form-control" value="${titleLikeValue}"
+                            <input id="titleLikeValue" name="titleLikeValue" type="text" class="form-control"
+                                   value="${titleLikeValue}"
                                    placeholder="主题">
                         </div>
                         <button type="submit" class="btn btn-default">
                             <span class="glyphicon glyphicon-search"></span> 搜索主题</button>
                     </g:form>
-                    <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
-                            data-target="#infoNewModal">
-                        <span class="glyphicon glyphicon-plus-sign"></span> 添加</button>
-                    <button type="button" class="btn btn-default navbar-btn" onclick="updateInfoDataManage()">
-                        <span class="glyphicon glyphicon-pencil"></span> 修改</button>
-                    <button type="button" class="btn btn-default navbar-btn" onclick="deleteInfoDataManage()">
+                    <button type="button" class="btn btn-primary navbar-btn" onclick="recover()">
+                        <span class="glyphicon glyphicon-plus-sign"></span> 恢复</button>
+                    <button type="button" class="btn btn-default navbar-btn" onclick="cleanAll()">
+                        <span class="glyphicon glyphicon-fire"></span> 清空回收站</button>
+                    <button type="button" class="btn btn-default navbar-btn" onclick="deleteInfoDataManage(1)">
                         <span class="glyphicon glyphicon-trash"></span> 删除</button>
                 </nav>
 
