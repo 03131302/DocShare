@@ -74,7 +74,7 @@ function initEdit() {
     }
     $('#filePath').uploadify({
         'swf': getLocation() + 'static/js/uploadify/uploadify.swf',
-        'uploader': getLocation() + 'infoFile/upload',
+        'uploader': getLocation() + "infoFile/upload" + getSession(),
         height: 35,
         removeCompleted: false,
         buttonText: "选择文件",
@@ -204,7 +204,7 @@ function selectUser() {
         var zTree = $.fn.zTree.getZTreeObj("infoOrgzTree");
         $.each(data.split(";"), function (i, n) {
             if (n) {
-                var nodes = zTree.getNodesByParam("id", n, null);
+                var nodes = zTree.getNodesByParam("id", n + "#", null);
                 $.each(nodes, function (i, node) {
                     zTree.checkNode(node, true);
                 });
@@ -227,7 +227,7 @@ function selectUserData(type) {
         var tempName = "";
         for (i = 0; i < data.length; i++) {
             if (!data[i].isParent) {
-                temp += data[i].id + ";";
+                temp += data[i].id.replace("#", "") + ";";
                 tempName += data[i].name + ";";
             }
         }

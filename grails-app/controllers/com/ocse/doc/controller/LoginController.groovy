@@ -19,7 +19,7 @@ class LoginController {
                 Sql sql = new Sql(dataSource: dataSource);
                 String id = ""
                 sql.eachRow("""
-                              select [id] from [DocManage].[dbo].[admin_user] where [user_code]=${
+                              select [id] from [DocManage].[dbo].[admin_user] where [is_stop]=1 and [user_code]=${
                     userName
                 } and [pass_word]=${passWord.encodeAsMD5()} """) {
                     data ->
@@ -36,7 +36,7 @@ class LoginController {
                     }
                     redirect([action: "index", controller: "index"])
                 } else {
-                    render view: "login", model: [data: "用户名或密码错误！"]
+                    render view: "login", model: [data: "用户名、密码错误，或者该账号已停用！"]
                 }
             }
         } else {

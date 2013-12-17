@@ -298,6 +298,9 @@
     function getLocation() {
         return "${request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"}";
     }
+    function getSession() {
+        return ";jsessionid=${session.id}";
+    }
 </script>
 <r:layoutResources/>
 </body>

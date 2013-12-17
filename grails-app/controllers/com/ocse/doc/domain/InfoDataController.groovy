@@ -27,7 +27,7 @@ class InfoDataController {
                 user == session["adminUser"]
             }
         }
-        render view: "index", model: [infoDataInstanceCount: InfoData.count(),
+        render view: "index", model: [infoDataInstanceCount: c.count(),
                 infoDataList: c.list(params), titleLikeValue: params.titleLikeValue]
     }
 
@@ -97,17 +97,16 @@ class InfoDataController {
         Sql sql = new Sql(dataSource: dataSource)
         def listData = []
         sql.eachRow("""
-                    SELECT [id]
-                                              ,[version]
-                                              ,[name]
-                                              ,[parent_id]
-                                              ,[pxh]
-                                              ,[text]
-                                          FROM [DocManage].[dbo].[organization]
-                     UNION ALL
-
-                    select t.id,t.version,t.user_name,t.org_id,t.pxh,t.text from
-                    [DocManage].[dbo].admin_user t where t.jb='普通用户' order by pxh """) {
+                    SELECT cast([id] as varchar(100)) [id]
+                            ,[version]
+                            ,[name]
+                            ,[parent_id]
+                            ,[pxh]
+                            ,[text]
+                            FROM [DocManage].[dbo].[organization]
+                            UNION ALL
+                            select (cast([id] as varchar(100)) + '#'),t.version,t.user_name,t.org_id,t.pxh,t.text from
+                            [DocManage].[dbo].admin_user t where t.jb='普通用户' order by pxh""") {
             data ->
                 def map = [id: data.id, name: data.name, pId: data.parent_id == null ? 0 : data.parent_id]
                 listData.add(map)

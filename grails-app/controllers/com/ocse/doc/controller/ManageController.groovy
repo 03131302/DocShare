@@ -31,7 +31,14 @@ class ManageController {
 
     def userManageIndex(Integer max) {
         params.max = Math.min(max ?: 30, 100)
-        render view: "userManageIndex", model: [users: AdminUser.list(params), adminUserInstanceCount: AdminUser.count()]
+        if (params.userNameLike == null) {
+            params.userNameLike = ""
+        }
+        def c = AdminUser.where {
+            userName ==~ "%${params.userNameLike.toString()}%"
+        }
+        render view: "userManageIndex", model: [users: c.list(params), adminUserInstanceCount: c.count()
+                , userNameLike: params.userNameLike]
     }
 
     def updatePassWord(String oldPassWord, String newPassWord) {

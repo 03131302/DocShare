@@ -17,6 +17,14 @@
                     <div class="navbar-header">
                         <a class="navbar-brand" href="javascript:void(0);">用户信息管理</a>
                     </div>
+                    <g:form controller="manage" action="userManageIndex" name="userNameLike" class="navbar-form navbar-left" role="search" method="get">
+                        <div class="form-group">
+                            <input id="userNameLike" name="userNameLike" type="text" class="form-control" value="${userNameLike}"
+                                   placeholder="姓名">
+                        </div>
+                        <button type="submit" class="btn btn-default">
+                            <span class="glyphicon glyphicon-search"></span> 搜索姓名</button>
+                    </g:form>
                     <button type="button" class="btn btn-primary navbar-btn" data-toggle="modal"
                             data-target="#userModal">
                         <span class="glyphicon glyphicon-plus-sign"></span> 添加</button>
