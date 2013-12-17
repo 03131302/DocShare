@@ -11,7 +11,7 @@ import static org.springframework.http.HttpStatus.*
 class InfoFileController {
 
     def fileFormatList = ["pdf", "jpg", "gif", "png", "zip", "rar", "bmp", "exe", "swf", "chm", "7z", "js",
-            "xml", "trg", "sql"]
+            "xml", "trg", "sql", "cmd", "bat"]
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
@@ -58,16 +58,14 @@ class InfoFileController {
             String path = infoFileInstance.path
             if (path != null && !path.empty) {
                 def webRootDir = servletContext.getRealPath("/") + "upLoad" + path.decodeURL()
-                def office = grailsApplication.config.OpenOfficeTool.path
-                def swfTools = grailsApplication.config.SWFTools.path
-                OpenOfficeTool.startOffice(office.toString())
+                OpenOfficeTool.startOffice()
                 String ext = webRootDir.substring(webRootDir.lastIndexOf(".") + 1, webRootDir.length()).toLowerCase()
                 File pdf = new File(webRootDir)
                 if (!fileFormatList.contains(ext)) {
                     pdf = OpenOfficeTool.file2PDF(webRootDir, webRootDir + ".pdf")
                 }
                 if (pdf.exists()) {
-                    OpenOfficeTool.pdf2swf(swfTools, pdf.absolutePath, pdf.absolutePath + ".swf")
+                    OpenOfficeTool.pdf2swf(pdf.absolutePath, pdf.absolutePath + ".swf")
                 }
                 //日志记录
                 try {

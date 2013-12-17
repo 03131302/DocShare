@@ -10,8 +10,8 @@ import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConv
  */
 class OpenOfficeTool {
 
-    public static void startOffice(String officePath) {
-        String command = officePath
+    public static void startOffice() {
+        String command = "D:/Program Files/OpenOffice 4/program/soffice.exe"
         ProcessBuilder pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard");
         InputStream stderr = null;
         InputStreamReader isr = null;
@@ -46,9 +46,9 @@ class OpenOfficeTool {
         }
     }
 
-    public static void pdf2swf(String swfToolsPath, String pdfPath, String swfPath) {
+    public static void pdf2swf(String pdfPath, String swfPath) {
         try {
-            String command = swfToolsPath
+            String command = "D:/Program Files/SWFTools/pdf2swf.exe"
             ProcessBuilder pb = new ProcessBuilder(command,
                     "-T", "9", "-f", "\"" + pdfPath + "\"",
                     "-o", "\"" + swfPath + "\"", "-s", "poly2bitmap");
