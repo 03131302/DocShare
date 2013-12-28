@@ -27,7 +27,7 @@
                 </nav>
 
                 <div class="panel-body">
-                    <div id="infoTypezTree" class="ztree" style="margin-top: 0px;">
+                    <div id="infoTypezTreeUpdate" class="ztree" style="margin-top: 0px;">
                     </div>
                 </div>
             </div>

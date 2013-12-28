@@ -11,7 +11,7 @@ import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConv
 class OpenOfficeTool {
 
     public static void startOffice() {
-        String command = "D:/Program Files/OpenOffice 4/program/soffice.exe"
+        String command = "/opt/openoffice4/program/soffice"
         ProcessBuilder pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard");
         InputStream stderr = null;
         InputStreamReader isr = null;
@@ -48,7 +48,7 @@ class OpenOfficeTool {
 
     public static void pdf2swf(String pdfPath, String swfPath) {
         try {
-            String command = "D:/Program Files/SWFTools/pdf2swf.exe"
+            String command = "/usr/local/bin/pdf2swf"
             ProcessBuilder pb = new ProcessBuilder(command,
                     "-T", "9", "-f", "\"" + pdfPath + "\"",
                     "-o", "\"" + swfPath + "\"", "-s", "poly2bitmap");

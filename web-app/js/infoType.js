@@ -1,10 +1,10 @@
 if (typeof jQuery !== 'undefined') {
     (function ($) {
-        initTree();
+        initTreeType();
     })(jQuery);
 }
 
-function initTree() {
+function initTreeType() {
     var options = {
         beforeSubmit: function showRequest() {
             return true;
@@ -19,7 +19,7 @@ function initTree() {
     };
     $('#infoTypeModal').ajaxForm(options);
 
-    var setting = {
+    var settingType = {
         edit: {
             enable: true,
             showRemoveBtn: false,
@@ -72,15 +72,15 @@ function initTree() {
         async: false,
         success: function (msg) {
             var zNodes = msg;
-            $.fn.zTree.init($("#infoTypezTree"), setting, zNodes);
-            var zTree = $.fn.zTree.getZTreeObj("infoTypezTree");
+            $.fn.zTree.init($("#infoTypezTreeUpdate"), settingType, zNodes);
+            var zTree = $.fn.zTree.getZTreeObj("infoTypezTreeUpdate");
             zTree.expandAll(true);
         }
     });
 }
 
 function updateOrg() {
-    var zTree = $.fn.zTree.getZTreeObj("infoTypezTree");
+    var zTree = $.fn.zTree.getZTreeObj("infoTypezTreeUpdate");
     var nodes = zTree.getSelectedNodes();
     if (nodes && nodes[0]) {
         var treeNode = nodes[0];
@@ -106,7 +106,7 @@ function updateOrg() {
 }
 
 function deleteOrg() {
-    var zTree = $.fn.zTree.getZTreeObj("infoTypezTree");
+    var zTree = $.fn.zTree.getZTreeObj("infoTypezTreeUpdate");
     var nodes = zTree.getSelectedNodes();
     if (nodes && nodes[0]) {
         var treeNode = nodes[0];

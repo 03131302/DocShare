@@ -16,7 +16,7 @@ environments {
     development {
         dataSource {
             dbCreate = ""
-            url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
+            url = "jdbc:sqlserver://192.168.1.102:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
                 minEvictableIdleTimeMillis = 1800000
@@ -33,7 +33,7 @@ environments {
     test {
         dataSource {
             dbCreate = ""
-            url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
+            url = "jdbc:sqlserver://192.168.1.102:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
                 minEvictableIdleTimeMillis = 1800000
@@ -50,7 +50,7 @@ environments {
     production {
         dataSource {
             dbCreate = ""
-            url = "jdbc:sqlserver://127.0.0.1:1433;databaseName=DocManage"
+            url = "jdbc:sqlserver://192.168.1.102:1433;databaseName=DocManage"
             properties {
                 maxActive = -1
                 minEvictableIdleTimeMillis = 1800000
