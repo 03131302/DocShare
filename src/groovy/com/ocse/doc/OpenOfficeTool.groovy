@@ -12,7 +12,7 @@ class OpenOfficeTool {
 
     public static void startOffice() {
         String command = "/opt/openoffice4/program/soffice"
-        ProcessBuilder pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard");
+        ProcessBuilder pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard", "&");
         InputStream stderr = null;
         InputStreamReader isr = null;
         BufferedReader br = null;
@@ -26,7 +26,7 @@ class OpenOfficeTool {
                 System.out.println(line);
             }
             int exitVal = pro.waitFor();
-            System.out.println("Process exitValue: " + exitVal);
+            System.out.println("PDF服务启动完成: " + exitVal);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -47,11 +47,14 @@ class OpenOfficeTool {
     }
 
     public static void pdf2swf(String pdfPath, String swfPath) {
+        println "开始转换SWF......"
         try {
+            pdfPath = pdfPath.replaceAll("\\\\", "/")
+            swfPath = swfPath.replaceAll("\\\\", "/")
             String command = "/usr/local/bin/pdf2swf"
             ProcessBuilder pb = new ProcessBuilder(command,
-                    "-T", "9", "-f", "\"" + pdfPath + "\"",
-                    "-o", "\"" + swfPath + "\"", "-s", "poly2bitmap");
+                    "-T", "9", "-f", pdfPath ,
+                    "-o", swfPath, "-s", "poly2bitmap");
             InputStream stderr = null;
             InputStreamReader isr = null;
             BufferedReader br = null;
@@ -65,7 +68,7 @@ class OpenOfficeTool {
                     System.out.println(line);
                 }
                 int exitVal = pro.waitFor();
-                System.out.println("Process exitValue: " + exitVal);
+                System.out.println("SWF输出完成: " + exitVal);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -89,8 +92,12 @@ class OpenOfficeTool {
     }
 
     public static File file2PDF(String officeFilePath, String pdfFilePath) {
+        officeFilePath = officeFilePath.replaceAll("\\\\", "/")
+        pdfFilePath = pdfFilePath.replaceAll("\\\\", "/")
         def input = new File(officeFilePath)
         def output = new File(pdfFilePath)
+
+        println "PDF转换完成：${input.absolutePath}"
 
         def connection = new SocketOpenOfficeConnection("127.0.0.1", 8100)
         connection.connect()

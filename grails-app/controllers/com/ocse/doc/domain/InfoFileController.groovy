@@ -64,7 +64,7 @@ class InfoFileController {
                 if (!fileFormatList.contains(ext)) {
                     pdf = OpenOfficeTool.file2PDF(webRootDir, webRootDir + ".pdf")
                 }
-                if (pdf.exists()) {
+                if (pdf.exists() && pdf.canRead()) {
                     OpenOfficeTool.pdf2swf(pdf.absolutePath, pdf.absolutePath + ".swf")
                 }
                 //日志记录
