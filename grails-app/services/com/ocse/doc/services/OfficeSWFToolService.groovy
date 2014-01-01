@@ -1,18 +1,20 @@
-package com.ocse.doc
+package com.ocse.doc.services
 
 import com.artofsolving.jodconverter.DefaultDocumentFormatRegistry
 import com.artofsolving.jodconverter.DocumentFamily
 import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection
 import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter
 
-/**
- * Created by Administrator on 13-12-15.
- */
-class OpenOfficeTool {
+class OfficeSWFToolService {
 
-    public static void startOffice() {
-        String command = "/opt/openoffice4/program/soffice"
-        ProcessBuilder pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard", "&");
+    static transactional = false
+    static scope = "prototype"
+
+    def grailsApplication
+
+    public void startOffice() {
+        String command = grailsApplication.config.OpenOfficeTool.office
+        ProcessBuilder pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard");
         InputStream stderr = null;
         InputStreamReader isr = null;
         BufferedReader br = null;
@@ -46,14 +48,14 @@ class OpenOfficeTool {
         }
     }
 
-    public static void pdf2swf(String pdfPath, String swfPath) {
+    public void pdf2swf(String pdfPath, String swfPath) {
         println "开始转换SWF......"
         try {
             pdfPath = pdfPath.replaceAll("\\\\", "/")
             swfPath = swfPath.replaceAll("\\\\", "/")
-            String command = "/usr/local/bin/pdf2swf"
+            String command = grailsApplication.config.OpenOfficeTool.swftool
             ProcessBuilder pb = new ProcessBuilder(command,
-                    "-T", "9", "-f", pdfPath ,
+                    "-T", "9", "-f", pdfPath,
                     "-o", swfPath, "-s", "poly2bitmap");
             InputStream stderr = null;
             InputStreamReader isr = null;
@@ -91,7 +93,7 @@ class OpenOfficeTool {
         }
     }
 
-    public static File file2PDF(String officeFilePath, String pdfFilePath) {
+    public File file2PDF(String officeFilePath, String pdfFilePath) {
         officeFilePath = officeFilePath.replaceAll("\\\\", "/")
         pdfFilePath = pdfFilePath.replaceAll("\\\\", "/")
         def input = new File(officeFilePath)
@@ -118,5 +120,4 @@ class OpenOfficeTool {
         }
         return output
     }
-
 }
