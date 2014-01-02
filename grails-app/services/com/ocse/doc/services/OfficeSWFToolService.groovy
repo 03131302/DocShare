@@ -14,7 +14,12 @@ class OfficeSWFToolService {
 
     public void startOffice() {
         String command = grailsApplication.config.OpenOfficeTool.office
-        ProcessBuilder pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard");
+        ProcessBuilder pb
+        if (System.getProperties().getProperty("os.name").toString().contains("Windows")) {
+            pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard");
+        } else {
+            pb = new ProcessBuilder(command, "-headless", "-accept=\"socket,host=127.0.0.1,port=8100;urp;\"", "-nofirststartwizard", "&");
+        }
         InputStream stderr = null;
         InputStreamReader isr = null;
         BufferedReader br = null;
