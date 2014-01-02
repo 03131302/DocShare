@@ -78,12 +78,20 @@ function initEdit() {
         height: 35,
         removeCompleted: false,
         buttonText: "选择文件",
-        'onUploadSuccess': function (file, data, response) {
+        'onUploadSuccess': function (file, dataTemp, response) {
+            var data = jQuery.parseJSON(dataTemp);
             var temp = $("#filePathValue").val();
             if (!temp) {
                 temp = "";
             }
-            $("#filePathValue").val(temp + data + ";");
+            $("#filePathValue").val(temp + data.path + ";");
+
+            temp = $("#fileNameValue").val();
+            if (!temp) {
+                temp = "";
+            }
+            $("#fileNameValue").val(temp + data.name + ";");
+
             var temp2 = $("#title").val();
             if (!temp2) {
                 temp2 = "";
@@ -278,7 +286,8 @@ function updateInfoNew(id) {
                             $("#fileList").append("<ul id=\"list\" class=\"list-group\"></ul>");
                         }
                         $("#filePathValue").val(n.path + ";" + $("#filePathValue").val());
-                        $("#list").append("<li class=\"list-group-item\">" + n.name + " <button onclick=\"deleteFile('" + n.path + "',this)\" type=\"button\" class=\"btn btn-link\">删除</button></li>");
+                        $("#fileNameValue").val(n.name + ";" + $("#fileNameValue").val());
+                        $("#list").append("<li class=\"list-group-item\">" + n.name + " <button onclick=\"deleteFile('" + n.path + "',this,'" + n.name + "')\" type=\"button\" class=\"btn btn-link\">删除</button></li>");
                     });
                 }
                 var users = msg.users;
@@ -298,11 +307,16 @@ function updateInfoNew(id) {
     });
 }
 
-function deleteFile(path, obj) {
+function deleteFile(path, obj, name) {
     if (confirm("确定删除该文件？")) {
         var pathAll = $("#filePathValue").val().toString();
         pathAll = pathAll.replace(path, "");
         $("#filePathValue").val(pathAll);
+
+        pathAll = $("#fileNameValue").val().toString();
+        pathAll = pathAll.replace(name, "");
+        $("#fileNameValue").val(pathAll);
+
         $(obj).parent().remove();
     }
 }

@@ -133,17 +133,22 @@ class InfoDataController {
                 Sql sql = new Sql(dataSource: dataSource)
                 infoData.save flash: true
                 String filePathValue = params.filePathValue
+                String fileNameValue = params.fileNameValue
+                println "名称：${fileNameValue}"
                 if (filePathValue != null && !filePathValue.empty && infoData.id != null) {
+                    def names = fileNameValue.split(";")
+                    int i = 0
                     filePathValue.split(";").each { data ->
                         InfoFile file = new InfoFile()
                         file.infoData = infoData
                         file.saveDate = new Date()
                         file.state = 0
                         file.path = data
-                        file.name = data.decodeURL().toString().substring(data.decodeURL().toString().lastIndexOf("/") + 1, data.decodeURL().toString().length())
+                        file.name = names[i]
                         if (file.name != null && !file.name.empty) {
                             file.save flash: true
                         }
+                        i++
                     }
                 }
                 String userScopeData = params.userScopeData
@@ -228,18 +233,23 @@ class InfoDataController {
                 Sql sql = new Sql(dataSource: dataSource)
                 infoData.save flash: true
                 String filePathValue = params.filePathValue
+                String fileNameValue = params.fileNameValue
+                println "名称：${fileNameValue}"
                 if (filePathValue != null && !filePathValue.empty && infoData.id != null) {
                     sql.execute("""delete from [DocManage].[dbo].[info_file] where [info_data_id]=${infoData.id}""")
+                    def names = fileNameValue.split(";")
+                    int i = 0
                     filePathValue.split(";").each { data ->
                         InfoFile file = new InfoFile()
                         file.infoData = infoData
                         file.saveDate = new Date()
                         file.state = 0
                         file.path = data
-                        file.name = data.decodeURL().toString().substring(data.decodeURL().toString().lastIndexOf("/") + 1, data.decodeURL().toString().length())
+                        file.name = names[i]
                         if (file.name != null && !file.name.empty) {
                             file.save flash: true
                         }
+                        i++
                     }
                 }
                 String userScopeData = params.userScopeData

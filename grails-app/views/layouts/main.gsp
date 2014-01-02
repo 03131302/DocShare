@@ -162,6 +162,7 @@
                     <div class="form-group">
                         <div class="col-md-12">
                             <input type="hidden" name="filePathValue" id="filePathValue">
+                            <input type="hidden" name="fileNameValue" id="fileNameValue">
                             <input type="file" name="filePath" id="filePath">
                         </div>
 

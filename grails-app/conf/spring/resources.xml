@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd   http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd"
+       default-lazy-init="true">
+
+    <!--文档服务器-->
+    <mongo:mongo id="mongo" host="127.0.0.1" port="27020">
+        <mongo:options
+                connect-timeout="50000"
+                max-wait-time="50000"
+                auto-connect-retry="true"
+                socket-keep-alive="true"
+                socket-timeout="50000"
+                write-fsync="true"/>
+    </mongo:mongo>
+    <mongo:db-factory id="mongoDbFactory" username="admin"
+                      password="adminadmin" dbname="fileDatabase" mongo-ref="mongo"/>
+    <bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+        <constructor-arg name="mongoDbFactory" ref="mongoDbFactory"/>
+    </bean>
+    <mongo:mapping-converter id="converter"/>
+    <bean id="gridFsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
+        <constructor-arg ref="mongoDbFactory"/>
+        <constructor-arg ref="converter"/>
+    </bean>
+</beans>
