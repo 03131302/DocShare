@@ -38,16 +38,6 @@
     </tr>
 </table>
 <g:layoutBody/>
-<div id="footer">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <p class="text-muted text-center">
-                版权所有：东营市环境保护局 Copyright 2013-2020 dyepb.gov.cn 鲁ICP备10003379号<br/>
-                联系电话：（0546）8331789 12369 通讯地址：东营市东营区府前街100号 邮政编码：257091
-            </p>
-        </div>
-    </div>
-</div>
 
 <div class="modal fade" id="myModalUpdatePassWord" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
@@ -82,7 +72,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="infoNewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="" id="infoNewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" style="width: 920px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -145,14 +135,14 @@
                                    id="shareType" name="shareType" value="全部">
                             <input type="hidden" class="form-control"
                                    id="userScopeData" name="userScopeData" required>
-                            <input type="text" readonly class="form-control" ondblclick="selectUser()"
-                                   id="userScope" name="userScope" required value="全部">
+                            <input type="text" readonly class="form-control" onclick="selectUser()"
+                                   id="userScope" name="userScope" required value="全部" style="cursor: pointer;">
                         </div>
 
                     </div>
 
                     <div class="form-group">
-                        <label for="title" class="col-md-1 control-label">主&nbsp;&nbsp;&nbsp;&nbsp;题</label>
+                        <label for="title" class="col-md-1 control-label">主&nbsp;&nbsp;&nbsp;题</label>
 
                         <div class="col-md-11">
                             <input type="text" class="form-control" id="title" name="title" required>
@@ -175,6 +165,8 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button type="reset" class="btn btn-default">
+                            <span class="glyphicon glyphicon-refresh"></span> 清空</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
                         <button type="submit" class="btn btn-primary">
@@ -186,7 +178,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="infoNewreTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" data-backdrop="" id="infoNewreTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -206,6 +198,8 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button type="reset" class="btn btn-default">
+                            <span class="glyphicon glyphicon-refresh"></span> 清空</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
                         <button type="submit" class="btn btn-primary">
@@ -217,7 +211,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="infoTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" data-backdrop="" id="infoTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -241,7 +235,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="infoTypeModalSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" data-backdrop="" id="infoTypeModalSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -265,7 +259,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="infoOrgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" data-backdrop="" id="infoOrgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

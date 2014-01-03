@@ -24,7 +24,7 @@ class AdminUser {
     String userCode
     String passWord
     String text
-    int pxh
+    float pxh
     boolean isStop
     String jb
 
@@ -48,11 +48,11 @@ class AdminUser {
         return userName
     }
 
-    int getPxh() {
+    float getPxh() {
         return pxh
     }
 
-    void setPxh(int pxh) {
+    void setPxh(float pxh) {
         this.pxh = pxh
     }
 

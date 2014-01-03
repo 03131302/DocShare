@@ -1,10 +1,26 @@
 if (typeof jQuery !== 'undefined') {
     (function ($) {
-        initTree();
+        initTreeUserManage();
     })(jQuery);
 }
 
-function initTree() {
+function initTreeUserManage() {
+    $("#userCode").blur(function () {
+        if (!$("#id").length) {
+            if ($("#userCode").val()) {
+                $("#passWord").val($("#userCode").val().toString() + "@123");
+            }
+        }
+    })
+    $("#passWord").focus(function () {
+        if (!$("#id").length) {
+            if (!$("#passWord").val()) {
+                if ($("#userCode").val()) {
+                    $("#passWord").val($("#userCode").val().toString() + "@123");
+                }
+            }
+        }
+    });
     var options = {
         beforeSubmit: function showRequest() {
             return true;

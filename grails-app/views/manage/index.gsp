@@ -35,7 +35,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="orgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="orgModal" data-backdrop="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -64,6 +64,8 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button type="reset" class="btn btn-default">
+                            <span class="glyphicon glyphicon-refresh"></span> 清空</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
                         <button type="submit" class="btn btn-primary">
@@ -75,5 +77,5 @@
     </div>
 </div>
 </body>
-<r:require module="orgManage" />
+<r:require module="orgManage"/>
 </html>

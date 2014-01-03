@@ -34,6 +34,8 @@ class ManageController {
         if (params.userNameLike == null) {
             params.userNameLike = ""
         }
+        params.sort = "pxh"
+        params.order = "asc"
         def c = AdminUser.where {
             userName ==~ "%${params.userNameLike.toString()}%"
         }

@@ -28,7 +28,7 @@ class Organization {
     void setText(String text) {
         this.text = text
     }
-    int pxh
+    float pxh
 
     String getName() {
         return name
@@ -38,11 +38,11 @@ class Organization {
         this.name = name
     }
 
-    int getPxh() {
+    float getPxh() {
         return pxh
     }
 
-    void setPxh(int pxh) {
+    void setPxh(float pxh) {
         this.pxh = pxh
     }
 

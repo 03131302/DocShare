@@ -77,7 +77,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,6 +86,10 @@
             </div>
 
             <div class="modal-body">
+                <div class="alert alert-info">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <strong>提示：</strong> 初始密码为：用户登录名@123
+                </div>
                 <g:form controller="adminUser" action="save" role="form" method="post" name="userForm">
                     <input type="hidden" class="form-control" id="org" name="org.id" value="">
 
@@ -155,6 +159,8 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button type="reset" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-refresh"></span> 清空</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
                         <button type="submit" class="btn btn-primary">
@@ -166,7 +172,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="orgModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="orgModal" data-backdrop="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

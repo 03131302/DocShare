@@ -82,8 +82,8 @@
 
             <div class="row">
                 <div class="col-md-4">
-                    <a href="${resource(dir: "js/browsers", file: "IE8-WindowsXP-x86-CHS.exe")}" target="_blank">
-                        <img src="${resource(dir: "images", file: "ie.png")}" width="40" height="40" title="IE8 下载">
+                    <a href="${resource(dir: "js/browsers", file: "IE10-Windows6.1-x86-zh-cn.exe")}" target="_blank">
+                        <img src="${resource(dir: "images", file: "ie.png")}" width="40" height="40" title="IE10 下载">
                     </a>
                 </div>
             </div>

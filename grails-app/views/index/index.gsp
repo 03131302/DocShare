@@ -176,14 +176,14 @@
                                                                 height="18"
                                                                 width="18" title="下载" onclick="downloadFile('${data.id}')" style="cursor: pointer;">
                                                     </div>
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 navbar-right">
                                                         <div class="dropdown">
                                                             <img
                                                                     src="${resource(dir: "images", file: "gengduo.png")}"
                                                                     height="18" width="18" title="更多"
                                                                     data-toggle="dropdown" style="cursor: pointer;">
                                                             <ul class="dropdown-menu" role="menu"
-                                                                aria-labelledby="dropdownMenu1">
+                                                                aria-labelledby="dropdownMenu2">
                                                                 <g:set var="theType" value="-1"></g:set>
                                                                 <g:if test="${data?.re_type != null}">
                                                                     <g:if test="${"文件提交反馈".equals(data?.re_type)}">
@@ -289,7 +289,7 @@
                                                             width="18" title="下载" onclick="downloadFile('${data.id}')" style="cursor: pointer;">
                                                 </div>
 
-                                                <div class="col-md-4">
+                                                <div class="col-md-4 navbar-right">
                                                     <div class="dropdown">
                                                         <img
                                                                 src="${resource(dir: "images", file: "gengduo.png")}"
