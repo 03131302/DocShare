@@ -8,6 +8,9 @@ if (typeof jQuery !== 'undefined') {
         initPassWord();
         initEdit();
         initTree();
+        $('#infoNewModal').on('hidden.bs.modal', function (e) {
+            document.location.reload();
+        })
     })(jQuery);
 }
 

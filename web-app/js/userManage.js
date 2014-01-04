@@ -5,15 +5,18 @@ if (typeof jQuery !== 'undefined') {
 }
 
 function initTreeUserManage() {
+    $('#userModal').on('hidden.bs.modal', function (e) {
+        document.location.reload();
+    })
     $("#userCode").blur(function () {
-        if (!$("#id").length) {
+        if (!$("#id").val()) {
             if ($("#userCode").val()) {
                 $("#passWord").val($("#userCode").val().toString() + "@123");
             }
         }
     })
     $("#passWord").focus(function () {
-        if (!$("#id").length) {
+        if (!$("#id").val()) {
             if (!$("#passWord").val()) {
                 if ($("#userCode").val()) {
                     $("#passWord").val($("#userCode").val().toString() + "@123");

@@ -42,7 +42,7 @@
                                                                    type="checkbox"
                                                                    value="${data.id}"></td>
                             <td style="text-align: center;">${n + 1}</td>
-                            <td>${data.user.userName}</td>
+                            <td>${(data?.user?.userName)?data?.user?.userName:"[已删除]"}</td>
                             <td>
                                 <g:if test="${data.infoData != null}">
                                     <g:link name="${data.infoData?.title}"

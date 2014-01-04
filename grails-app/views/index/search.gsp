@@ -79,7 +79,7 @@
                                                                 width="18" title="下载" style="cursor: pointer;">
                                                     </div>
 
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-4 navbar-right">
                                                         <div class="dropdown">
                                                             <img
                                                                     src="${resource(dir: "images", file: "gengduo.png")}"

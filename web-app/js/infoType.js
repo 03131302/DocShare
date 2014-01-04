@@ -5,6 +5,9 @@ if (typeof jQuery !== 'undefined') {
 }
 
 function initTreeType() {
+    $('#infoTypeModal').on('hidden.bs.modal', function (e) {
+        document.location.reload();
+    })
     var options = {
         beforeSubmit: function showRequest() {
             return true;

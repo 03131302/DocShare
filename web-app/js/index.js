@@ -1,10 +1,10 @@
 if (typeof jQuery !== 'undefined') {
     (function ($) {
-        initTree();
+        initIndexTree();
     })(jQuery);
 }
 
-function initTree() {
+function initIndexTree() {
     var setting = {
         data: {
             simpleData: {

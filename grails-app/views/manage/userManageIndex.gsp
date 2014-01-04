@@ -159,7 +159,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="reset" class="btn btn-default" data-dismiss="modal">
+                        <button type="reset" class="btn btn-default">
                             <span class="glyphicon glyphicon-refresh"></span> 清空</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">
                             <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>

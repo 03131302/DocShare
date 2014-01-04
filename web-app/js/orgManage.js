@@ -1,10 +1,13 @@
 if (typeof jQuery !== 'undefined') {
     (function ($) {
-        initTree();
+        initTreeOrgManage();
     })(jQuery);
 }
 
-function initTree() {
+function initTreeOrgManage() {
+    $('#orgModal').on('hidden.bs.modal', function () {
+        document.location.reload();
+    });
     var options = {
         beforeSubmit: function showRequest() {
             return true;
