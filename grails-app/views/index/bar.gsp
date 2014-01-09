@@ -22,7 +22,7 @@
         <span class="glyphicon glyphicon-arrow-left"></span> 返回</button>
     <g:if test="${(controllerName == "index" && actionName == "search") || org != null}">
         <button type="button" class="btn btn-default navbar-btn" onclick="exitKey();">
-            <span class="glyphicon glyphicon-repeat"></span> 退出关键字查询</button>
+            <span class="glyphicon glyphicon-repeat"></span> 退出关键字</button>
     </g:if>
     <button type="button" class="btn btn-default navbar-btn" data-toggle="modal"
             data-target="#userWorkLogModal">

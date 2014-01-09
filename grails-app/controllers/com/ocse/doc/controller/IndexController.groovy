@@ -202,7 +202,7 @@ class IndexController {
                 recveList.add(map)
         }
         render view: "index", model: [allList: allList, recveList: recveList,
-                org: Organization.get(params.orgID), sharefile: sharefile]
+                org: Organization.get(params.orgID), sharefile: sharefile, getCountInfo: getCountInfo(params)]
     }
 
     def search() {
@@ -310,15 +310,6 @@ class IndexController {
         int type = params.theType
         switch (params.theType) {
             case "1":
-                def results = InfoData.where {
-                    user == session["adminUser"] && state == 0
-                }
-                params.sort = "saveDate"
-                params.order = "desc"
-                render view: "more", model: [infoDataInstanceCount: results.count(),
-                        infoData: results.list(params), title: "发件箱"]
-                break
-            case "2":
                 if (params.offset == null) {
                     params.offset = 0
                 }
@@ -340,7 +331,11 @@ class IndexController {
                     }
                 }
                 render view: "more", model: [infoDataInstanceCount: o[0],
-                        infoData: theData, title: "收件箱"]
+                        infoData: theData, title: "收件夹"]
+                break
+            case "2":
+                params.top = 1000
+                render view: "moreTotal", model: [infoData: getCountInfo(params), title: "发布统计"]
                 break
             case "3":
                 def results = InfoData.where {
@@ -352,5 +347,82 @@ class IndexController {
                         infoData: results.list(params), title: "共享信息"]
                 break
         }
+    }
+
+    def private getCountInfo(def params) {
+        def listData = []
+        Sql sql = new Sql(dataSource: dataSource)
+        String weeksql = getCountSQL("YEAR", params)
+        sql.eachRow(weeksql) {
+            data ->
+                def map = [id: data.id, name: data.name, yid: data.wid]
+                listData.add(map)
+        }
+        def dataMap = [:]
+        weeksql = getCountSQL("MONTH", params)
+        sql.eachRow(weeksql) {
+            data ->
+                dataMap.put(data.id, [id: data.id, wid: data.wid])
+        }
+        weeksql = getCountSQL("WEEK", params)
+        def wdataMap = [:]
+        sql.eachRow(weeksql) {
+            data ->
+                wdataMap.put(data.id, [id: data.id, wid: data.wid])
+        }
+        listData.each {
+            data ->
+                data.put("mid", dataMap.get(data.id).wid)
+                data.put("wid", wdataMap.get(data.id).wid)
+        }
+        listData
+    }
+
+    private String getCountSQL(String type, def params) {
+        String weeksql = """SELECT DISTINCT
+                                TOP ${params.top ? params.top : 5} o.id,
+                                o.name,
+                                COUNT (d.id) wid
+                                FROM
+                                organization o
+                                LEFT JOIN (
+                                        SELECT
+                                        u.org_id,
+                                d.*
+                                        FROM
+                                admin_user u,
+                                        info_data d
+                                WHERE
+                                        u.id = d.user_id
+                                AND d.share_scope = '工作信息'
+                                AND datediff(
+                                        ${type},
+                                        d.[save_date],
+                                        getdate()
+                                ) = 0
+                                ) d ON o.id = d.org_id
+                                WHERE
+                                o.id NOT IN (20, 22, 67, 68, 69, 70)
+                                """
+        if (params.orgID != null && !params.orgID.empty) {
+            weeksql = """
+                        WITH orgtree([id],[name],[parent_id],[pxh]) as
+                        (
+                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${
+                params.orgID
+            }
+                        UNION ALL
+                        SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
+                        where a.parent_id = b.id
+                        )
+                        ${weeksql}
+                        and o.id in (select [id] from orgtree)
+                        """
+        }
+        weeksql + """  GROUP BY
+                    o.id,
+                    o.name
+                    ORDER BY
+                    wid DESC"""
     }
 }

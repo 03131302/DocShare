@@ -137,7 +137,7 @@
 
                             <div class="panel-footer text-right" style="color: #1316e3"><g:link controller="index"
                                                                                                 action="more"
-                                                                                                params="${[theType: 2]}"><span
+                                                                                                params="${[theType: 1]}"><span
                                         class="glyphicon glyphicon-th-large"></span>&nbsp;更多</g:link></div>
                         </div>
                     </div>
@@ -166,48 +166,15 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <g:each in="${recveList}" var="data" status="n">
+                                    <g:each in="${getCountInfo}" var="data" status="n">
                                         <tr>
                                             <td style="width: 30px;text-align: center;">${n + 1}</td>
                                             <td>
-                                                <g:link name="${data.title}"
-                                                        title="${data.title}" controller="infoData"
-                                                        action="show"
-                                                        params="${[id: data.id]}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}
-                                                    <g:if test="${data.log <= 0}">
-                                                        <span
-                                                                class="badge pull-right">未读</span>
-                                                    </g:if>
-                                                </g:link>
+                                                ${data.name.length() > 20 ? data.name.substring(0, 20) + "..." : data.name}
                                             </td>
-                                            <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
-                                            <td style="width: 90px;">
-                                                <div class="row" style="width: 90px;">
-                                                    <div class="col-md-4">
-                                                        <img src="${resource(dir: "images", file: "yulan.png")}"
-                                                             height="18"
-                                                             width="18" title="预览"
-                                                             onclick="showOnLine('${data.id}')"
-                                                             style="cursor: pointer;">
-                                                    </div>
-
-                                                    <div class="col-md-4">
-                                                        <img
-                                                                src="${resource(dir: "images", file: "xiazai.png")}"
-                                                                height="18"
-                                                                width="18" title="下载" onclick="downloadFile('${data.id}')" style="cursor: pointer;">
-                                                    </div>
-                                                    <div class="col-md-4 navbar-right">
-                                                        <div class="dropdown">
-                                                            <img
-                                                                    src="${resource(dir: "images", file: "gengduo.png")}"
-                                                                    height="18" width="18" title="更多"
-                                                                    data-toggle="dropdown" style="cursor: pointer;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>&nbsp;</td>
+                                            <td>${data.wid}</td>
+                                            <td>${data.mid}</td>
+                                            <td>${data.yid}</td>
                                         </tr>
                                     </g:each>
                                     </tbody>

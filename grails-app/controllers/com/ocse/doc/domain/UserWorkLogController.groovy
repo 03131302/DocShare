@@ -85,8 +85,10 @@ class UserWorkLogController {
     def save(UserWorkLog userWorkLogInstance) {
         String info = "true"
         try {
-            userWorkLogInstance.logDate = Date.parse("yyyy-MM-dd", params.logDate)
+            userWorkLogInstance.logDate = new Date().parse("yyyy-MM-dd", params.logDate)
+            userWorkLogInstance.clearErrors()
             userWorkLogInstance.save flush: true
+            println userWorkLogInstance
         } catch (Exception e) {
             e.printStackTrace()
             info = e.getMessage()
@@ -102,6 +104,7 @@ class UserWorkLogController {
     def update(UserWorkLog userWorkLogInstance) {
         String info = "true"
         try {
+            userWorkLogInstance.clearErrors()
             userWorkLogInstance.logDate = Date.parse("yyyy-MM-dd", params.logDate)
             userWorkLogInstance.save flush: true
         } catch (Exception e) {
