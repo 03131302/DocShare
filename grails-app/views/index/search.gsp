@@ -37,7 +37,7 @@
                                 <div class="panel-heading">
                                     <img style="margin-top: 0px;"
                                          src="${resource(dir: "images", file: "quanjuxinxi.gif")}"/>
-                                    <sapn style="padding-top: 10px;"><strong>包含"${keyValue}"的${typeKeyName ? "\"" + typeKeyName + "\"类" : ""}共享信息</strong>
+                                    <sapn style="padding-top: 10px;"><strong>按"${keyValue}"检索的${typeKeyName ? "\"" + typeKeyName + "\"类" : ""}共享信息</strong>
                                     </sapn>
                                 </div>
 

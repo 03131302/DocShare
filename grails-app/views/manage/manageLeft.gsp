@@ -1,6 +1,6 @@
 <g:set var="collapse0" value=""></g:set>
 <g:set var="collapse1" value=""></g:set>
-<g:if test="${controllerName == "manage" || controllerName == "loginLog"}">
+<g:if test="${controllerName == "manage" || controllerName == "loginLog" || controllerName == "userCommit" || controllerName == "userWorkLog"}">
     <g:set var="collapse0" value="in"></g:set>
     <g:set var="collapse1" value=""></g:set>
 </g:if>
@@ -31,7 +31,11 @@
                                     class="list-group-item ${(controllerName == "manage" && actionName == "userManageIndex") ? "active" : ""}">用户信息管理</g:link>
                             <g:link controller="loginLog" action="index"
                                     class="list-group-item ${(controllerName == "loginLog" && actionName == "index") ? "active" : ""}">登陆日志查看</g:link>
+                            <g:link controller="userCommit" action="index"
+                                    class="list-group-item ${(controllerName == "userCommit" && actionName == "index") ? "active" : ""}">用户建议反馈</g:link>
                         </g:if>
+                        <g:link controller="userWorkLog" action="index"
+                                class="list-group-item ${(controllerName == "userWorkLog" && actionName == "index") ? "active" : ""}">工作日志管理</g:link>
                         <a href="javascript:void(0)" data-toggle="modal"
                            data-target="#myModalUpdatePassWord" class="list-group-item">本人密码修改</a>
                     </div>
@@ -57,6 +61,8 @@
                                     class="list-group-item ${(controllerName == "infoLog" && actionName == "index") ? "active" : ""}">信息日志查看</g:link>
                             <g:link controller="infoType" action="index"
                                     class="list-group-item ${(controllerName == "infoType" && actionName == "index") ? "active" : ""}">关键字管理</g:link>
+                            <g:link controller="shareFile" action="index"
+                                    class="list-group-item ${(controllerName == "shareFile" && actionName == "index") ? "active" : ""}">信息共享目录</g:link>
                             <g:link controller="infoData" action="recycleIndex"
                                     class="list-group-item ${(controllerName == "infoData" && actionName == "recycleIndex") ? "active" : ""}">回收站信息管理</g:link>
                         </g:if>

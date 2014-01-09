@@ -11,6 +11,15 @@ modules = {
     loginLog {
         resource url: 'js/loginLog.js'
     }
+    userCommit {
+        resource url: 'js/userCommit.js'
+    }
+    workLog {
+        resource url: 'js/workLog.js'
+    }
+    shareFile {
+        resource url: 'js/shareFile.js'
+    }
     index {
         resource url: 'js/index.js'
     }

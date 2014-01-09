@@ -17,6 +17,11 @@ function cleanAll() {
     }
 }
 
+
+function exportExcel() {
+    $("#logFile").attr("src", getLocation() + "loginLog/exportToExcel");
+}
+
 function deleteLog() {
     var n = 0;
     var ids = "";

@@ -2,6 +2,7 @@ package com.ocse.doc.controller
 
 import com.ocse.doc.domain.InfoData
 import com.ocse.doc.domain.Organization
+import com.ocse.doc.domain.ShareFile
 import groovy.sql.Sql
 
 class IndexController {
@@ -13,30 +14,14 @@ class IndexController {
         if (session["adminUser"] == null) {
             return false
         }
-        Sql sql = new Sql(dataSource: dataSource)
-        def sendList = []
 
-        def sendListSQL = """
-                    SELECT TOP 5 [id]
-                          ,[version]
-                          ,[save_date]
-                          ,[save_state]
-                          ,[share_scope]
-                          ,[share_type]
-                          ,[title]
-                          ,(SELECT [name]
-                            FROM [DocManage].[dbo].[info_type] n where n.id=[type_id]) type
-                          ,[user_id]
-                          ,[text_data]
-                          ,[re_type]
-                      FROM [DocManage].[dbo].[info_data] where [user_id]=${
-            session["adminUser"].id
-        } and [state]=0 order by [save_date] desc"""
-        sql.eachRow(sendListSQL) {
-            data ->
-                def map = [id: data.id, date: data.save_date, title: data.title, type: data.type]
-                sendList.add(map)
-        }
+        def filep = [:]
+        filep.max = 3
+        filep.sort = "logDate"
+        filep.order = "desc"
+        def sharefile = ShareFile.list(filep)
+
+        Sql sql = new Sql(dataSource: dataSource)
         def allList = []
         def allListSQL = """
                          SELECT TOP 20 [id]
@@ -55,7 +40,7 @@ class IndexController {
                                   ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=t.[id] and m.[user_id]=${
             session["adminUser"].id
         }) log
-                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [state]=0 order by t.[save_date] desc"""
+                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [share_scope] = '工作信息' and [state]=0 order by t.[save_date] desc"""
         if (params.orgID != null && !params.orgID.empty) {
             allListSQL = """
                         WITH orgtree([id],[name],[parent_id],[pxh]) as
@@ -83,7 +68,7 @@ class IndexController {
                                   ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=t.[id] and m.[user_id]=${
                 session["adminUser"].id
             }) log
-                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [state]=0
+                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [share_scope] = '工作信息' and [state]=0
                               and t.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
                               order by t.[save_date] desc"""
         }
@@ -98,26 +83,55 @@ class IndexController {
         def recveList = []
 
         def recveListSQL = """
-                   SELECT TOP 5  b.[id]
-                                ,b.[version]
-                                ,[save_date]
-                                ,[save_state]
-                                ,[share_scope]
-                                ,[share_type]
-                                ,[title]
-                                ,(SELECT [name]
-                                FROM [DocManage].[dbo].[info_type] n where n.id=[type_id]) type
-                                ,(SELECT [user_name]
-                                FROM [DocManage].[dbo].[admin_user] where [id]=b.[user_id]) [user]
-                                ,[text_data]
-                                ,[re_type]
-                                ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=b.[id] and m.[user_id]=${
-            session["adminUser"].id
-        }) log
-                                  FROM [DocManage].[dbo].[info_user_scope] a,[DocManage].[dbo].[info_data] b where
-                                  b.id=a.info_id and a.[user_id]='${
-            session["adminUser"].id
-        }' and [state]=0 order by [save_date] desc"""
+                            SELECT DISTINCT
+                            TOP 5 b.[id],
+                            b.[version],
+                                    [save_date],
+                                    [save_state],
+                                    [share_scope],
+                                    [share_type],
+                                    [title],
+                                    (
+                                    SELECT
+                                          [name]
+                                    FROM
+                            [DocManage].[dbo].[info_type] n
+                            WHERE
+                                    n.id = [type_id]
+                            ) type,
+                            (SELECT
+                                    [user_name]
+                            FROM
+                                    [DocManage].[dbo].[admin_user]
+                            WHERE
+                                    [id] = b.[user_id]
+                            ) [user],
+                            [re_type],
+                            (
+                            SELECT
+                            COUNT (m.[id])
+                                    FROM
+                            [DocManage].[dbo].[info_log] m
+                            WHERE
+                                    m.info_data_id = b.[id]
+                                    AND m.[user_id] =  ${session["adminUser"].id}
+                            ) log
+                            FROM
+                            [DocManage].[dbo].[info_data] b
+                            LEFT JOIN [DocManage].[dbo].[info_user_scope] a ON (
+                                    b.id = a.info_id
+                                    OR b.share_type = '全部'
+                            )
+                            WHERE
+                            b.share_scope = '通知公告'
+                            AND (
+                                    a.[user_id] = ${session["adminUser"].id}
+                                    OR b.share_type = '全部'
+                            )
+                            AND [state] = 0
+                            ORDER BY
+                            [save_date] DESC
+                            """
         if (params.orgID != null && !params.orgID.empty) {
             recveListSQL = """
                         WITH orgtree([id],[name],[parent_id],[pxh]) as
@@ -129,26 +143,56 @@ class IndexController {
                         SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
                         where a.parent_id = b.id
                         )
-                        SELECT TOP 5  b.[id]
-                                ,b.[version]
-                                ,[save_date]
-                                ,[save_state]
-                                ,[share_scope]
-                                ,[share_type]
-                                ,[title]
-                                ,(SELECT [name]
-                                FROM [DocManage].[dbo].[info_type] n where n.id=[type_id]) type
-                                ,(SELECT [user_name]
-                                FROM [DocManage].[dbo].[admin_user] where [id]=b.[user_id]) [user]
-                                ,[text_data]
-                                ,[re_type]
-                                ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=b.[id] and m.[user_id]=${
-                session["adminUser"].id
-            }) log
-                                  FROM [DocManage].[dbo].[info_user_scope] a,[DocManage].[dbo].[info_data] b where
-                                  b.id=a.info_id and a.[user_id]='${session["adminUser"].id}' and [state]=0
-                                 and b.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
-                                 order by [save_date] desc"""
+                        SELECT DISTINCT
+                            TOP 5 b.[id],
+                            b.[version],
+                                    [save_date],
+                                    [save_state],
+                                    [share_scope],
+                                    [share_type],
+                                    [title],
+                                    (
+                                    SELECT
+                                          [name]
+                                    FROM
+                            [DocManage].[dbo].[info_type] n
+                            WHERE
+                                    n.id = [type_id]
+                            ) type,
+                            (SELECT
+                                    [user_name]
+                            FROM
+                                    [DocManage].[dbo].[admin_user]
+                            WHERE
+                                    [id] = b.[user_id]
+                            ) [user],
+                            [re_type],
+                            (
+                            SELECT
+                            COUNT (m.[id])
+                                    FROM
+                            [DocManage].[dbo].[info_log] m
+                            WHERE
+                                    m.info_data_id = b.[id]
+                                    AND m.[user_id] =  ${session["adminUser"].id}
+                            ) log
+                            FROM
+                            [DocManage].[dbo].[info_data] b
+                            LEFT JOIN [DocManage].[dbo].[info_user_scope] a ON (
+                                    b.id = a.info_id
+                                    OR b.share_type = '全部'
+                            )
+                            WHERE
+                            b.share_scope = '通知公告'
+                            AND (
+                                    a.[user_id] = ${session["adminUser"].id}
+                                    OR b.share_type = '全部'
+                            )
+                            AND [state] = 0
+                            AND b.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
+                            ORDER BY
+                            [save_date] DESC
+                        """
         }
         log.info(recveListSQL)
         sql.eachRow(recveListSQL) {
@@ -157,8 +201,8 @@ class IndexController {
                         re_type: data.re_type, user: data.user, log: data.log]
                 recveList.add(map)
         }
-        render view: "index", model: [sendList: sendList, allList: allList, recveList: recveList,
-                org: Organization.get(params.orgID)]
+        render view: "index", model: [allList: allList, recveList: recveList,
+                org: Organization.get(params.orgID), sharefile: sharefile]
     }
 
     def search() {
@@ -196,14 +240,18 @@ class IndexController {
             sqlText = """
                         WITH orgtree([id],[name],[parent_id],[pxh]) as
                         (
-                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${params.orgID}
+                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${
+                params.orgID
+            }
                         UNION ALL
                         SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
                         where a.parent_id = b.id
                         ),
                         infotypetree([id],[name],[parent_info_type_id],[pxh]) as
                         (
-                        SELECT [id],[name],[parent_info_type_id],[pxh] FROM [DocManage].[dbo].[info_type] WHERE id =${typeKey}
+                        SELECT [id],[name],[parent_info_type_id],[pxh] FROM [DocManage].[dbo].[info_type] WHERE id =${
+                typeKey
+            }
                         UNION ALL
                         SELECT a.[id],a.[name],a.[parent_info_type_id],a.[pxh] FROM [DocManage].[dbo].[info_type] A,infotypetree b
                         where a.parent_info_type_id = b.id
@@ -217,7 +265,9 @@ class IndexController {
             sqlText = """
                         WITH orgtree([id],[name],[parent_id],[pxh]) as
                         (
-                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${params.orgID}
+                        SELECT [id],[name],[parent_id],[pxh] FROM [DocManage].[dbo].[organization] WHERE id = ${
+                params.orgID
+            }
                         UNION ALL
                         SELECT a.[id],a.[name],a.[parent_id],a.[pxh] FROM [DocManage].[dbo].[organization] A,orgtree b
                         where a.parent_id = b.id
@@ -275,14 +325,16 @@ class IndexController {
                 params.sort = "saveDate"
                 params.order = "desc"
                 def theData = []
-                def results = InfoData.findAll("from InfoData d,InfoUserScope o where o.info=d " +
-                        " and  o.user.id=${session["adminUser"].id} and d.state = 0 order by d.saveDate desc", [max: params.max, offset: params.offset])
-                def o = InfoData.executeQuery("select count(d.id) from InfoUserScope o,InfoData d where o.info=d and d.state = 0 " +
+                def results = InfoData.findAll("from InfoData d,InfoUserScope o where (d.shareType='全部' or o.info=d) and o.user.id=${session["adminUser"].id} and d.state = 0 " +
+                        "and d.shareScope = '通知公告' " +
+                        "  order " +
+                        "by d.saveDate desc", [max: params.max, offset: params.offset])
+                def o = InfoData.executeQuery("select count(distinct d.id) from InfoUserScope o,InfoData d where (d.shareType='全部' or o.info=d) and d.state = 0 and d.shareScope = '通知公告' " +
                         " and  o.user.id='${session["adminUser"].id}'")
                 results.each { data ->
                     data.each {
                         d ->
-                            if (d instanceof InfoData) {
+                            if (d instanceof InfoData && !theData.contains(d)) {
                                 theData.add(d)
                             }
                     }
@@ -292,7 +344,7 @@ class IndexController {
                 break
             case "3":
                 def results = InfoData.where {
-                    shareType == "全部" && state == 0
+                    shareType == "全部" && state == 0 && shareScope == "工作信息"
                 }
                 params.sort = "saveDate"
                 params.order = "desc"

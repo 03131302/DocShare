@@ -2,6 +2,10 @@ package com.ocse.doc.domain
 
 import grails.transaction.Transactional
 import groovy.sql.Sql
+import pl.touk.excel.export.WebXlsxExporter
+import pl.touk.excel.export.getters.PropertyGetter
+
+import java.sql.Timestamp
 
 import static org.springframework.http.HttpStatus.*
 
@@ -15,6 +19,29 @@ class LoginLogController {
         params.sort = "loginDate"
         params.order = "desc"
         render view: "index", model: [logList: LoginLog.list(params), loginLogInstanceCount: LoginLog.count()]
+    }
+
+    class CurrencyGetter extends PropertyGetter<Timestamp, String> {
+        CurrencyGetter(String propertyName) {
+            super(propertyName)
+        }
+
+        @Override
+        protected String format(java.sql.Timestamp value) {
+            return value.toString()
+        }
+    }
+
+    def exportToExcel() {
+        def withProperties = ['user.userName', 'ip', new CurrencyGetter('loginDate')]
+        params.sort = "loginDate"
+        params.order = "desc"
+        def log = LoginLog.list(params)
+        new WebXlsxExporter(grailsApplication.config.info.login).with {
+            setResponseHeaders(response)
+            add(log, withProperties)
+            save(response.outputStream)
+        }
     }
 
     def show(LoginLog loginLogInstance) {

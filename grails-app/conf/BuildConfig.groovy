@@ -40,6 +40,7 @@ grails.project.dependency.resolution = {
 
         runtime ":hibernate4:4.1.11.4"
         compile ":jcaptcha:1.2.1"
+        compile ":excel-export:0.1.10"
         runtime ":database-migration:1.3.8"
         runtime ":jquery:1.10.2"
         runtime ":resources:1.2.1"

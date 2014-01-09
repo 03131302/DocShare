@@ -21,6 +21,8 @@
                         <span class="glyphicon glyphicon-fire"></span> 清空日志</button>
                     <button type="button" class="btn btn-default navbar-btn" onclick="deleteLog()">
                         <span class="glyphicon glyphicon-trash"></span> 删除</button>
+                    <button type="button" class="btn btn-default navbar-btn" onclick="exportExcel()">
+                        <span class="glyphicon glyphicon-download-alt"></span> 导出Excel</button>
                 </nav>
 
                 <table class="table table-striped table-condensed table-hover">
@@ -44,7 +46,7 @@
                             <td style="text-align: center;">${n + 1}</td>
                             <td>${(data?.user?.userName)?data?.user?.userName:"[已删除]"}</td>
                             <td>
-                                <g:if test="${data.infoData != null}">
+                                <g:if test="${data.infoData != null && data.infoData.state != -1}">
                                     <g:link name="${data.infoData?.title}"
                                             title="${data.infoData?.title}" controller="infoData"
                                             action="show"
@@ -53,7 +55,7 @@
                                     </g:link>
                                 </g:if>
                                 <g:else>
-                                    [已删除]
+                                    ${data.infoData?.title}[已清空]
                                 </g:else>
                             </td>
                             <td>${data.ip}</td>
@@ -74,6 +76,7 @@
         </div>
     </div>
 </div>
+<iframe id="logFile" src="" width="0" hidden="hidden" height="0"></iframe>
 <r:require module="infoLog"></r:require>
 </body>
 </html>

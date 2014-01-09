@@ -40,7 +40,7 @@ class LoginController {
                 }
             }
         } else {
-            render view: "login", model: [data: "验证码错误！"]
+            render view: "login", model: [data: "验证码错误！", user: userName, password: passWord]
             return
         }
     }

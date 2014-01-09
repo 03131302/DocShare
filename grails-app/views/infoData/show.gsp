@@ -40,7 +40,7 @@
                         <tbody>
                         <tr>
                             <td><strong>发布类型：</strong></td>
-                            <td>${infoDataInstance?.shareType}</td>
+                            <td>${infoDataInstance?.shareScope}</td>
                             <td><strong>信息类型：</strong></h4></td>
                             <td>${infoDataInstance?.type?.name}</td>
                             <td><strong>反馈类型：</strong></h4></td>

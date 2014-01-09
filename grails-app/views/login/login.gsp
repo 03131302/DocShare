@@ -19,7 +19,7 @@
 
                     <div class="col-sm-9">
                         <input type="text" class="form-control" id="userName" name="userName" placeholder="用户名"
-                               required>
+                               required value="${user}">
                     </div>
                 </div>
 
@@ -28,7 +28,7 @@
 
                     <div class="col-sm-9">
                         <input type="password" class="form-control" id="passWord" name="passWord" placeholder="密码"
-                               required>
+                               required value="${password}">
                     </div>
                 </div>
 

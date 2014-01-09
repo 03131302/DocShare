@@ -10,7 +10,13 @@ if (typeof jQuery !== 'undefined') {
         initTree();
         $('#infoNewModal').on('hidden.bs.modal', function (e) {
             document.location.reload();
-        })
+        });
+        $('#userCommitModal').on('hidden.bs.modal', function (e) {
+            document.location.reload();
+        });
+        $('#userWorkLogModal').on('hidden.bs.modal', function (e) {
+            document.location.reload();
+        });
     })(jQuery);
 }
 
@@ -40,6 +46,11 @@ function initEdit() {
             return true;
         },
         beforeSubmit: function showRequest() {
+            if (!$("#shareTypeName").val()) {
+                alert("请选择关键字！")
+                $("#typeButton")[0].focus();
+                return false;
+            }
             return true;
         },
         success: function showResponse(responseText) {
@@ -52,6 +63,31 @@ function initEdit() {
         }
     };
     $('#infoDataForm').ajaxForm(options);
+
+
+    var optionscommit = {
+        success: function showResponse(responseText) {
+            if (responseText == "true") {
+                alert("感谢您的宝贵意见，管理员会查收您的建议！");
+                document.location.reload();
+            } else {
+                alert(responseText);
+            }
+        }
+    };
+    $('#userCommitForm').ajaxForm(optionscommit);
+
+    var optionsWorkLog = {
+        success: function showResponse(responseText) {
+            if (responseText == "true") {
+                alert("日志填写完成，您可以到后台查看并编辑！");
+                document.location.reload();
+            } else {
+                alert(responseText);
+            }
+        }
+    };
+    $('#userWorkLogForm').ajaxForm(optionsWorkLog);
 
 
     var options2 = {
@@ -78,9 +114,10 @@ function initEdit() {
     $('#filePath').uploadify({
         'swf': getLocation() + 'static/js/uploadify/uploadify.swf',
         'uploader': getLocation() + "infoFile/upload" + getSession(),
-        height: 35,
-        removeCompleted: false,
-        buttonText: "选择文件",
+        'height': 35,
+        'fileSizeLimit': '50MB',
+        'removeCompleted': false,
+        'buttonText': "选择文件",
         'onUploadSuccess': function (file, dataTemp, response) {
             var data = jQuery.parseJSON(dataTemp);
             var temp = $("#filePathValue").val();
@@ -97,9 +134,9 @@ function initEdit() {
 
             var temp2 = $("#title").val();
             if (!temp2) {
-                temp2 = "";
+                var t = file.name.toString();
+                $("#title").val(t.substring(0, t.lastIndexOf(".")));
             }
-            $("#title").val(temp2 + file.name + ";")
         }
     });
 }
@@ -113,10 +150,15 @@ function initTree() {
         },
         callback: {
             onDblClick: function (event, treeId, treeNode) {
-                var pid = treeNode.id;
-                $("#type").val(pid);
-                $("#shareTypeName").val(treeNode.name);
-                $('#infoTypeModal').modal('hide');
+                if (!treeNode.children) {
+                    var pid = treeNode.id;
+                    $("#type").val(pid);
+                    $("#shareTypeName").val(treeNode.name);
+                    $('#infoTypeModal').modal('hide');
+                } else {
+                    alert("请选择二级目录！");
+                    return false;
+                }
             }
         }
     };
@@ -322,4 +364,8 @@ function deleteFile(path, obj, name) {
 
         $(obj).parent().remove();
     }
+}
+
+function exitKey() {
+    document.location = getLocation();
 }

@@ -20,4 +20,27 @@
         <span class="glyphicon glyphicon-random"></span> 信息发布</button>
     <button type="button" class="btn btn-default navbar-btn" onclick="javascript:history.go(-1);">
         <span class="glyphicon glyphicon-arrow-left"></span> 返回</button>
+    <g:if test="${(controllerName == "index" && actionName == "search") || org != null}">
+        <button type="button" class="btn btn-default navbar-btn" onclick="exitKey();">
+            <span class="glyphicon glyphicon-repeat"></span> 退出关键字查询</button>
+    </g:if>
+    <button type="button" class="btn btn-default navbar-btn" data-toggle="modal"
+            data-target="#userWorkLogModal">
+        <span class="glyphicon glyphicon-calendar"></span> 工作日志</button>
+
+    <div class="btn-group navbar-btn">
+        <button type="button" class="btn btn-default">信息共享目录</button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+            <g:each in="${sharefile}" var="fileData">
+                <li><g:link target="_blank" controller="shareFile" action="download" params="[id:fileData.id]">${fileData.title}</g:link></li>
+            </g:each>
+        </ul>
+    </div>
+    <button type="button" class="btn btn-default navbar-btn" data-toggle="modal"
+            data-target="#userCommitModal">
+        <span class="glyphicon glyphicon-comment"></span> 建议反馈</button>
 </nav>

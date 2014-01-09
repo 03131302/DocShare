@@ -21,6 +21,8 @@
                         <span class="glyphicon glyphicon-fire"></span> 清空日志</button>
                     <button type="button" class="btn btn-default navbar-btn" onclick="deleteLog()">
                         <span class="glyphicon glyphicon-trash"></span> 删除</button>
+                    <button type="button" class="btn btn-default navbar-btn" onclick="exportExcel()">
+                        <span class="glyphicon glyphicon-download-alt"></span> 导出Excel</button>
                 </nav>
 
                 <table class="table table-bordered table-hover">
@@ -57,6 +59,7 @@
         </div>
     </div>
 </div>
+<iframe id="logFile" src="" width="0" hidden="hidden" height="0"></iframe>
 <r:require module="loginLog"/>
 </body>
 </html>

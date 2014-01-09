@@ -19,17 +19,20 @@
     <tr>
         <td width="597"><img src="${resource(dir: "images", file: "head01.jpg")}" width="597"
                              height="92"/></td>
-        <td width="99%" id="herd00" align="right"></td>
-        <td width="1%" id="herd00" align="right">
+        <td width="98%" id="herd00" align="right"></td>
+        <td width="2%" id="herd00" align="left" style="padding-right: 30px;">
             <table width="111" border="0" cellspacing="0" cellpadding="0">
                 <tr>
-                    <td width="33%" align="center"><g:link controller="index" action="index"><img
+                    <td width="25%" align="center"><g:link controller="index" action="index"><img
                             src="${resource(dir: "images", file: "shuaxin.gif")}" width="37" title="首页"
                             height="34"/></g:link></td>
-                    <td width="33%" align="center"><g:link controller="manage" action="index"><img
+                    <td width="25%" align="center"><g:link controller="manage" action="index"><img
                             src="${resource(dir: "images", file: "shezhi.gif")}" width="37" title="系统管理"
                             height="34"/></g:link></td>
-                    <td width="33%" align="center"><g:link controller="login" action="logout"><img
+                    <td width="25%" align="center"><g:link controller="index" action="index"><img
+                            src="${resource(dir: "images", file: "help.gif")}" width="37" title="使用帮助"
+                            height="34"/></g:link></td>
+                    <td width="25%" align="center" style="padding-left: 10px;"><g:link controller="login" action="logout"><img
                             src="${resource(dir: "images", file: "tuichu.gif")}" width="37" title="退出系统"
                             height="34"/></g:link></td>
                 </tr>
@@ -98,16 +101,16 @@
                         </div>
 
                         <div class="col-md-4">
-                            <label for="shareTypeName" class="col-md-4 control-label">信息类型</label>
+                            <label for="shareTypeName" class="col-md-4 control-label">关键字&nbsp;</label>
 
                             <div class="col-md-8">
                                 <div class="input-group">
                                     <input type="hidden" class="form-control"
                                            id="type" name="type.id">
                                     <input type="text" readonly class="form-control"
-                                           id="shareTypeName" name="shareTypeName">
+                                           id="shareTypeName" name="shareTypeName" required>
                                     <span class="input-group-btn">
-                                        <button class="btn btn-default" type="button" data-toggle="modal"
+                                        <button id="typeButton" class="btn btn-default" type="button" data-toggle="modal"
                                                 data-target="#infoTypeModal">选择</button>
                                     </span>
                                 </div>
@@ -283,12 +286,94 @@
     </div>
 </div>
 
+<div class="modal fade" data-backdrop="" id="userCommitModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">建议反馈</h4>
+            </div>
+
+            <div class="modal-body">
+                <g:form controller="userCommit" action="save" method="post" class="form-horizontal" role="form"
+                        name="userCommitForm">
+                    <input type="hidden" id="user" name="user.id" value="${session["adminUser"]?.id}">
+
+                    <div class="form-group">
+                        <label for="oldPassWord">主题</label>
+                        <input type="text" class="form-control" id="title" name="title"
+                               placeholder="主题" required>
+                    </div>
+                    <div class="form-group">
+                        <textarea name="content" id="content" class="form-control" rows="8" required></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-default">
+                            <span class="glyphicon glyphicon-refresh"></span> 清空</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-plus-sign"></span> 确定</button>
+                    </div>
+                </g:form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" data-backdrop="" id="userWorkLogModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">工作日志</h4>
+            </div>
+
+            <div class="modal-body">
+                <g:form controller="userWorkLog" action="save" method="post" class="form-horizontal" role="form"
+                        name="userWorkLogForm">
+                    <input type="hidden" id="user" name="user.id" value="${session["adminUser"]?.id}">
+
+                    <div class="form-group">
+                        <label for="oldPassWord">主题</label>
+                        <input type="text" class="form-control" id="title" name="title"
+                               placeholder="主题" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="oldPassWord">日期</label>
+                        <input type="text" class="form-control" id="logDate" name="logDate" onClick="WdatePicker()"
+                               placeholder="日期" required>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea name="content" id="content" class="form-control" rows="8" required></textarea>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="reset" class="btn btn-default">
+                            <span class="glyphicon glyphicon-refresh"></span> 清空</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <span class="glyphicon glyphicon-remove-circle"></span> 取消</button>
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-plus-sign"></span> 确定</button>
+                    </div>
+                </g:form>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript" src="${resource(dir: 'js', file: 'jquery-1.10.2.min.js')}"></script>
 <script type="text/javascript" src="${resource(dir: "js", file: "jquery.ztree.all-3.5.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: "js/uploadify", file: "jquery.uploadify.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: "js/ckeditor", file: "ckeditor.js")}"></script>
 <script type="text/javascript" src="${resource(dir: "js", file: "bootstrap.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: 'js', file: 'jquery.form.min.js')}"></script>
+<script type="text/javascript" src="${resource(dir: 'js/My97DatePicker', file: 'WdatePicker.js')}"></script>
 <script type="text/javascript">
     function getLocation() {
         return "${request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+request.getContextPath()+"/"}";

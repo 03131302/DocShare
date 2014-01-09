@@ -2,6 +2,9 @@ package com.ocse.doc.domain
 
 import grails.transaction.Transactional
 import groovy.sql.Sql
+import org.springframework.data.mongodb.core.query.Query
+import org.springframework.data.mongodb.gridfs.GridFsCriteria
+import org.springframework.data.mongodb.gridfs.GridFsTemplate
 
 import static org.springframework.http.HttpStatus.NOT_FOUND
 
@@ -9,6 +12,8 @@ import static org.springframework.http.HttpStatus.NOT_FOUND
 class InfoDataController {
 
     def dataSource
+
+    def GridFsTemplate gridFsTemplate
 
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)
@@ -35,7 +40,18 @@ class InfoDataController {
         String info = "true"
         Sql sql = new Sql(dataSource: dataSource)
         try {
-            sql.execute("delete from [DocManage].[dbo].[info_data] where [state]=1")
+            sql.execute("update [DocManage].[dbo].[info_data] set [state]=-1 where [state]=1")
+            sql.eachRow("SELECT\n" +
+                    "\ta.path\n" +
+                    "FROM\n" +
+                    "\tinfo_file a,\n" +
+                    "\tinfo_data b\n" +
+                    "WHERE\n" +
+                    "\ta.info_data_id = b.id\n" +
+                    "AND b.state =- 1") {
+                data ->
+                    gridFsTemplate.delete(Query.query(GridFsCriteria.where("md5").is(data.path)))
+            }
         } catch (Exception e) {
             e.printStackTrace()
             info = e.getMessage()
@@ -339,7 +355,18 @@ class InfoDataController {
                     } catch (Exception e) {
                         e.printStackTrace()
                     }
-                    sql.execute("delete from [DocManage].[dbo].[info_data] where id=${data}")
+                    sql.execute("update [DocManage].[dbo].[info_data] set [state]=-1 where id=${data}")
+                    sql.eachRow("SELECT\n" +
+                            "\ta.path\n" +
+                            "FROM\n" +
+                            "\tinfo_file a,\n" +
+                            "\tinfo_data b\n" +
+                            "WHERE\n" +
+                            "\ta.info_data_id = b.id\n" +
+                            "AND b.state =- 1") {
+                        dataPath ->
+                            gridFsTemplate.delete(Query.query(GridFsCriteria.where("md5").is(dataPath.path)))
+                    }
                 } catch (Exception e) {
                     e.printStackTrace()
                     info = e.getMessage()

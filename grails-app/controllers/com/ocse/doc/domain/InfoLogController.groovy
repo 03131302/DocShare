@@ -2,6 +2,8 @@ package com.ocse.doc.domain
 
 import grails.transaction.Transactional
 import groovy.sql.Sql
+import pl.touk.excel.export.WebXlsxExporter
+import pl.touk.excel.export.getters.PropertyGetter
 
 import static org.springframework.http.HttpStatus.*
 
@@ -9,6 +11,7 @@ import static org.springframework.http.HttpStatus.*
 class InfoLogController {
 
     def dataSource
+    def grailsApplication
 
     def index(Integer max) {
         params.max = Math.min(max ?: 30, 100)
@@ -16,6 +19,29 @@ class InfoLogController {
         params.order = "desc"
         render view: "index", model: [infoLogInstanceCount: InfoLog.count(),
                 logs: InfoLog.list(params)]
+    }
+
+    class CurrencyGetter extends PropertyGetter<java.sql.Timestamp, String> {
+        CurrencyGetter(String propertyName) {
+            super(propertyName)
+        }
+
+        @Override
+        protected String format(java.sql.Timestamp value) {
+            return value.toString()
+        }
+    }
+
+    def exportToExcel() {
+        def withProperties = ['user.userName', 'infoData.title', 'ip', new CurrencyGetter('infoDate'), 'type']
+        params.sort = "infoDate"
+        params.order = "desc"
+        def log = InfoLog.list(params)
+        new WebXlsxExporter(grailsApplication.config.info.log).with {
+            setResponseHeaders(response)
+            add(log, withProperties)
+            save(response.outputStream)
+        }
     }
 
     def show(InfoLog infoLogInstance) {
