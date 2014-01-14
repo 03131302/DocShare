@@ -3,6 +3,8 @@ package com.ocse.doc.domain
 class UserWorkLog {
 
     static constraints = {
+        title nullable: true
+        content nullable: true
     }
 
     static belongsTo = [user: AdminUser]

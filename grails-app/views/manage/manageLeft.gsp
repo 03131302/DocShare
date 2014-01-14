@@ -34,8 +34,10 @@
                             <g:link controller="userCommit" action="index"
                                     class="list-group-item ${(controllerName == "userCommit" && actionName == "index") ? "active" : ""}">用户建议反馈</g:link>
                         </g:if>
-                        <g:link controller="userWorkLog" action="index"
-                                class="list-group-item ${(controllerName == "userWorkLog" && actionName == "index") ? "active" : ""}">工作日志管理</g:link>
+                        <g:if test="${!"管理员".equals(session["adminUser"].jb)}">
+                            <g:link controller="userWorkLog" action="index"
+                                    class="list-group-item ${(controllerName == "userWorkLog" && actionName == "index") ? "active" : ""}">工作日志管理</g:link>
+                        </g:if>
                         <a href="javascript:void(0)" data-toggle="modal"
                            data-target="#myModalUpdatePassWord" class="list-group-item">本人密码修改</a>
                     </div>

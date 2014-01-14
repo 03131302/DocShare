@@ -60,7 +60,7 @@
                                             <g:link name="${data.title}"
                                                     title="${data.title}" controller="infoData"
                                                     action="show"
-                                                    params="${[id: data.id]}">${data.title.length() > 20 ? data.title.substring(0, 20) + "..." : data.title}
+                                                    params="${[id: data.id]}">${data.title.length() > 16 ? data.title.substring(0, 16) + "..." : data.title}
                                                 <g:if test="${data.log <= 0}">
                                                     <span
                                                             class="badge pull-right">未读</span>
@@ -202,8 +202,7 @@
                                     <th>主题</th>
                                     <th>发布时间</th>
                                     <th>信息类型</th>
-                                    <th>发件人</th>
-                                    <th>发布类型</th>
+                                    <th>发布人</th>
                                     <th>快速访问</th>
                                 </tr>
                                 </thead>
@@ -224,7 +223,6 @@
                                         <td><g:formatDate format="yyyy-MM-dd" date="${data.date}"/></td>
                                         <td>${data.type}</td>
                                         <td>${data.user}</td>
-                                        <td>${data.shareScope}</td>
                                         <td style="width: 90px;">
                                             <div class="row" style="width: 90px;">
                                                 <div class="col-md-4">

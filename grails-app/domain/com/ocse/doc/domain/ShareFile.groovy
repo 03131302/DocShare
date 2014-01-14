@@ -3,6 +3,8 @@ package com.ocse.doc.domain
 class ShareFile {
 
     static constraints = {
+        title nullable: true
+        path nullable: true
     }
 
     Date logDate

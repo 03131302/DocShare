@@ -3,6 +3,8 @@ package com.ocse.doc.domain
 class UserCommit {
 
     static constraints = {
+        content nullable: true
+        title nullable: true
     }
 
     static belongsTo = [user: AdminUser]

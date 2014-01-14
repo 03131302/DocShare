@@ -303,7 +303,7 @@
                     <div class="form-group">
                         <label for="oldPassWord">主题</label>
                         <input type="text" class="form-control" id="title" name="title"
-                               placeholder="主题" required>
+                               placeholder="主题">
                     </div>
                     <div class="form-group">
                         <textarea name="content" id="content" class="form-control" rows="8" required></textarea>
@@ -340,13 +340,13 @@
                     <div class="form-group">
                         <label for="oldPassWord">主题</label>
                         <input type="text" class="form-control" id="title" name="title"
-                               placeholder="主题" required>
+                               placeholder="主题">
                     </div>
 
                     <div class="form-group">
                         <label for="oldPassWord">日期</label>
                         <input type="text" class="form-control" id="logDate" name="logDate" onClick="WdatePicker()"
-                               placeholder="日期" required>
+                               placeholder="日期" value="${new Date().format("yyyy-MM-dd")}">
                     </div>
 
                     <div class="form-group">
