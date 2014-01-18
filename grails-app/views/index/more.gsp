@@ -44,7 +44,7 @@
                                         <th style="text-align: center;">#</th>
                                         <th>主题</th>
                                         <th>发布时间</th>
-                                        <th>信息类型</th>
+                                        <th>关键字</th>
                                         <th>发件人</th>
                                         <th>发布类型</th>
                                         <th>快速访问</th>
