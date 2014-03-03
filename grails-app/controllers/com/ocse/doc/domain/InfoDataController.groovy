@@ -69,7 +69,7 @@ class InfoDataController {
         def c = InfoData.where {
             title ==~ "%${params.titleLikeValue.toString()}%" && state == 1
         }
-        render view: "recycleIndex", model: [infoDataInstanceCount: InfoData.count(),
+        render view: "recycleIndex", model: [infoDataInstanceCount: c.count(),
                 infoDataList: c.list(params), titleLikeValue: params.titleLikeValue]
     }
 
