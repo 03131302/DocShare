@@ -372,8 +372,16 @@ class IndexController {
         }
         listData.each {
             data ->
-                data.put("mid", dataMap.get(data.id).wid)
-                data.put("wid", wdataMap.get(data.id).wid)
+                def mid = dataMap.get(data.id)?.wid
+                if (mid == null) {
+                    mid = 0
+                }
+                def wid = wdataMap.get(data.id)?.wid
+                if (wid == null) {
+                    wid = 0
+                }
+                data.put("mid", mid)
+                data.put("wid", wid)
         }
         listData
     }
