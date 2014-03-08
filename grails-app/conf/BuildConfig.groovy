@@ -33,16 +33,16 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        build ":tomcat:7.0.50.1"
+        build ":tomcat:7.0.52.1"
 
-        compile ":scaffolding:2.0.1"
+        compile ":scaffolding:2.0.2"
         compile ':cache:1.1.1'
 
-        runtime ":hibernate4:4.1.11.4"
+        runtime ":hibernate4:4.3.4"
         compile ":jcaptcha:1.2.1"
         compile ":excel-export:0.1.10"
         runtime ":database-migration:1.3.8"
-        runtime ":jquery:1.10.2"
+        runtime ":jquery:1.11.0.2"
         runtime ":resources:1.2.1"
     }
 }
