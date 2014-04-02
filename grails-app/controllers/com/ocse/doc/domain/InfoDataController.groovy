@@ -33,7 +33,7 @@ class InfoDataController {
             }
         }
         render view: "index", model: [infoDataInstanceCount: c.count(),
-                infoDataList: c.list(params), titleLikeValue: params.titleLikeValue]
+                                      infoDataList         : c.list(params), titleLikeValue: params.titleLikeValue]
     }
 
     def cleanAll() {
@@ -70,7 +70,7 @@ class InfoDataController {
             title ==~ "%${params.titleLikeValue.toString()}%" && state == 1
         }
         render view: "recycleIndex", model: [infoDataInstanceCount: c.count(),
-                infoDataList: c.list(params), titleLikeValue: params.titleLikeValue]
+                                             infoDataList         : c.list(params), titleLikeValue: params.titleLikeValue]
     }
 
     def show(InfoData infoDataInstance) {
@@ -106,7 +106,7 @@ class InfoDataController {
             e.printStackTrace()
         }
         render view: "show", model: [infoDataInstance: infoDataInstance, users: users,
-                fileList: fileList, reTypeList: c.list()]
+                                     fileList        : fileList, reTypeList: c.list()]
     }
 
     def getUserTree() {
@@ -137,6 +137,8 @@ class InfoDataController {
     @Transactional
     def save() {
         InfoData infoData = new InfoData(params)
+        println infoData
+        log.info("参数：" + params)
         infoData.saveDate = new Date()
         infoData.saveState = "保存"
         infoData.user = session["adminUser"]
@@ -231,13 +233,14 @@ class InfoDataController {
         InfoType type = InfoType.get(infoDataInstance.type.id)
         render(contentType: "text/json") {
             [infoData: infoDataInstance, files: fileList
-                    , users: userList, type: type]
+             , users : userList, type: type]
         }
     }
 
     @Transactional
     def update(InfoData infoDataInstance) {
         InfoData infoData = infoDataInstance
+        log.info(infoData)
         infoData.saveDate = new Date()
         infoData.saveState = "修改"
         infoData.state = 0

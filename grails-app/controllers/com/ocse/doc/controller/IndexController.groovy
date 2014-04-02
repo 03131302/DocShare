@@ -40,7 +40,8 @@ class IndexController {
                                   ,(select count(m.[id]) from [DocManage].[dbo].[info_log] m where m.info_data_id=t.[id] and m.[user_id]=${
             session["adminUser"].id
         }) log
-                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [share_scope] = '工作信息' and [state]=0 order by t.[save_date] desc"""
+                              FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [share_scope] = '工作信息' and [state]=0
+                               and [zhiwu]<=${session["adminUser"].zhiwu} order by t.[save_date] desc"""
         if (params.orgID != null && !params.orgID.empty) {
             allListSQL = """
                         WITH orgtree([id],[name],[parent_id],[pxh]) as
@@ -69,14 +70,14 @@ class IndexController {
                 session["adminUser"].id
             }) log
                               FROM [DocManage].[dbo].[info_data] t where t.[share_type]='全部' and [share_scope] = '工作信息' and [state]=0
-                              and t.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
+                              and [zhiwu]<=${session["adminUser"].zhiwu} and t.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
                               order by t.[save_date] desc"""
         }
         log.info(allListSQL)
         sql.eachRow(allListSQL) {
             data ->
-                def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
-                        re_type: data.re_type, user: data.user, shareScope: data.share_scope, log: data.log]
+                def map = [id     : data.id, date: data.save_date, title: data.title, type: data.type,
+                           re_type: data.re_type, user: data.user, shareScope: data.share_scope, log: data.log]
                 allList.add(map)
         }
 
@@ -128,7 +129,7 @@ class IndexController {
                                     a.[user_id] = ${session["adminUser"].id}
                                     OR b.share_type = '全部'
                             )
-                            AND [state] = 0
+                            AND [state] = 0 and [zhiwu]<=${session["adminUser"].zhiwu}
                             ORDER BY
                             [save_date] DESC
                             """
@@ -188,7 +189,7 @@ class IndexController {
                                     a.[user_id] = ${session["adminUser"].id}
                                     OR b.share_type = '全部'
                             )
-                            AND [state] = 0
+                            AND [state] = 0 and [zhiwu]<=${session["adminUser"].zhiwu}
                             AND b.[user_id] in (SELECT [id] FROM [DocManage].[dbo].[admin_user] u where u.[org_id] in (select [id] from orgtree))
                             ORDER BY
                             [save_date] DESC
@@ -197,12 +198,12 @@ class IndexController {
         log.info(recveListSQL)
         sql.eachRow(recveListSQL) {
             data ->
-                def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
-                        re_type: data.re_type, user: data.user, log: data.log]
+                def map = [id     : data.id, date: data.save_date, title: data.title, type: data.type,
+                           re_type: data.re_type, user: data.user, log: data.log]
                 recveList.add(map)
         }
         render view: "index", model: [allList: allList, recveList: recveList,
-                org: Organization.get(params.orgID), sharefile: sharefile, getCountInfo: getCountInfo(params)]
+                                      org    : Organization.get(params.orgID), sharefile: sharefile, getCountInfo: getCountInfo(params)]
     }
 
     def search() {
@@ -222,7 +223,7 @@ class IndexController {
                 "   FROM [DocManage].[dbo].[admin_user] where [id]=b.[user_id]) [user]\n" +
                 "   ,[text_data]\n" +
                 "   ,[re_type]\n" +
-                "  FROM [DocManage].[dbo].[info_data] b where 1=1 and [state]=0 "
+                "  FROM [DocManage].[dbo].[info_data] b where 1=1 and [state]=0 and [zhiwu]<=${session["adminUser"].zhiwu} "
         Sql sql = new Sql(dataSource: dataSource)
         if (keyValue != null && !keyValue.empty) {
             sqlText += " and ([title] like '%" + keyValue + "%' or [text_data] like '%" + keyValue + "%')"
@@ -279,12 +280,12 @@ class IndexController {
         log.info(sqlText)
         sql.eachRow(sqlText + " order by [save_date] desc") {
             data ->
-                def map = [id: data.id, date: data.save_date, title: data.title, type: data.type,
-                        re_type: data.re_type, user: data.user, shareScope: data.share_scope]
+                def map = [id     : data.id, date: data.save_date, title: data.title, type: data.type,
+                           re_type: data.re_type, user: data.user, shareScope: data.share_scope]
                 searchList.add(map)
         }
-        render view: "search", model: [keyValue: params.keyValue, searchList: searchList, typeKey: params.typeKey,
-                typeKeyName: params.typeKeyName, org: Organization.get(params.orgID)]
+        render view: "search", model: [keyValue   : params.keyValue, searchList: searchList, typeKey: params.typeKey,
+                                       typeKeyName: params.typeKeyName, org: Organization.get(params.orgID)]
     }
 
     def getOrgTreeData() {
@@ -316,11 +317,12 @@ class IndexController {
                 params.sort = "saveDate"
                 params.order = "desc"
                 def theData = []
-                def results = InfoData.findAll("from InfoData d,InfoUserScope o where (d.shareType='全部' or o.info=d) and o.user.id=${session["adminUser"].id} and d.state = 0 " +
+                def results = InfoData.findAll("from InfoData d,InfoUserScope o where (d.shareType='全部' or o.info=d) " +
+                        "and o.user.id=${session["adminUser"].id} and d.state = 0 and d.zhiwu<=${session["adminUser"].zhiwu} " +
                         "and d.shareScope = '通知公告' " +
                         "  order " +
                         "by d.saveDate desc", [max: params.max, offset: params.offset])
-                def o = InfoData.executeQuery("select count(distinct d.id) from InfoUserScope o,InfoData d where (d.shareType='全部' or o.info=d) and d.state = 0 and d.shareScope = '通知公告' " +
+                def o = InfoData.executeQuery("select count(distinct d.id) from InfoUserScope o,InfoData d where (d.shareType='全部' or o.info=d) and d.state = 0 and d.zhiwu<=${session["adminUser"].zhiwu} and d.shareScope = '通知公告' " +
                         " and  o.user.id='${session["adminUser"].id}'")
                 results.each { data ->
                     data.each {
@@ -331,7 +333,7 @@ class IndexController {
                     }
                 }
                 render view: "more", model: [infoDataInstanceCount: o[0],
-                        infoData: theData, title: "收件夹"]
+                                             infoData             : theData, title: "收件夹"]
                 break
             case "2":
                 params.top = 1000
@@ -339,12 +341,12 @@ class IndexController {
                 break
             case "3":
                 def results = InfoData.where {
-                    shareType == "全部" && state == 0 && shareScope == "工作信息"
+                    shareType == "全部" && state == 0 && shareScope == "工作信息" && zhiwu<=${session["adminUser"].zhiwu}
                 }
                 params.sort = "saveDate"
                 params.order = "desc"
                 render view: "more", model: [infoDataInstanceCount: results.count(),
-                        infoData: results.list(params), title: "共享信息"]
+                                             infoData             : results.list(params), title: "共享信息"]
                 break
         }
     }

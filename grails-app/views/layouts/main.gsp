@@ -32,9 +32,10 @@
                     <td width="25%" align="center"><g:link controller="index" action="index"><img
                             src="${resource(dir: "images", file: "help.gif")}" width="37" title="使用帮助"
                             height="34"/></g:link></td>
-                    <td width="25%" align="center" style="padding-left: 10px;"><g:link controller="login" action="logout"><img
-                            src="${resource(dir: "images", file: "tuichu.gif")}" width="37" title="退出系统"
-                            height="34"/></g:link></td>
+                    <td width="25%" align="center" style="padding-left: 10px;"><g:link controller="login"
+                                                                                       action="logout"><img
+                                src="${resource(dir: "images", file: "tuichu.gif")}" width="37" title="退出系统"
+                                height="34"/></g:link></td>
                 </tr>
             </table>
         </td>
@@ -75,7 +76,8 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="" id="infoNewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="" id="infoNewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" style="width: 920px;">
         <div class="modal-content">
             <div class="modal-header">
@@ -110,7 +112,8 @@
                                     <input type="text" readonly class="form-control"
                                            id="shareTypeName" name="shareTypeName" required>
                                     <span class="input-group-btn">
-                                        <button id="typeButton" class="btn btn-default" type="button" data-toggle="modal"
+                                        <button id="typeButton" class="btn btn-default" type="button"
+                                                data-toggle="modal"
                                                 data-target="#infoTypeModal">选择</button>
                                     </span>
                                 </div>
@@ -133,7 +136,7 @@
                     <div class="form-group">
                         <label for="userScope" class="col-md-1 control-label">收件人</label>
 
-                        <div class="col-md-11">
+                        <div class="col-md-5">
                             <input type="hidden" class="form-control"
                                    id="shareType" name="shareType" value="全部">
                             <input type="hidden" class="form-control"
@@ -141,13 +144,22 @@
                             <input type="text" readonly class="form-control" onclick="selectUser()"
                                    id="userScope" name="userScope" required value="全部" style="cursor: pointer;">
                         </div>
+                        <label for="zhiwu" class="col-md-1 control-label">级别</label>
 
+                        <div class="col-md-5" style="padding-right: 28px;">
+                            <select class="form-control" name="zhiwu" id="zhiwu">
+                                <option value="0">全部</option>
+                                <option value="1">科级</option>
+                                <option value="2">处级</option>
+                                <option value="3">局级</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <label for="title" class="col-md-1 control-label">主&nbsp;&nbsp;&nbsp;题</label>
 
-                        <div class="col-md-11">
+                        <div class="col-md-11" style="padding-right: 28px;">
                             <input type="text" class="form-control" id="title" name="title" required>
                         </div>
                     </div>
@@ -163,7 +175,7 @@
                         </div>
                     </div>
 
-                    <div class="form-group" style="margin-left: 2px;">
+                    <div class="form-group" style="margin-left: 2px;padding-right: 28px;">
                         <textarea name="textData" id="textData"></textarea>
                     </div>
 
@@ -181,7 +193,8 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="" id="infoNewreTypeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" data-backdrop="" id="infoNewreTypeModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -238,7 +251,8 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="" id="infoTypeModalSearch" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" data-backdrop="" id="infoTypeModalSearch" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -305,6 +319,7 @@
                         <input type="text" class="form-control" id="title" name="title"
                                placeholder="主题">
                     </div>
+
                     <div class="form-group">
                         <textarea name="content" id="content" class="form-control" rows="8" required></textarea>
                     </div>
@@ -323,7 +338,8 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="" id="userWorkLogModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+<div class="modal fade" data-backdrop="" id="userWorkLogModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel"
      aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

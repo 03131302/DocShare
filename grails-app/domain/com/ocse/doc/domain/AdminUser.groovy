@@ -27,9 +27,18 @@ class AdminUser {
     float pxh
     boolean isStop
     String jb
+    int zhiwu
 
     String getJb() {
         return jb
+    }
+
+    int getZhiwu() {
+        return zhiwu
+    }
+
+    void setZhiwu(int zhiwu) {
+        this.zhiwu = zhiwu
     }
 
     void setJb(String jb) {
@@ -112,7 +121,8 @@ class AdminUser {
                 ", text='" + text + '\'' +
                 ", pxh=" + pxh +
                 ", isStop=" + isStop +
-                ", jb=" + jb +
+                ", jb='" + jb + '\'' +
+                ", zhiwu='" + zhiwu + '\'' +
                 ", version=" + version +
                 '}';
     }

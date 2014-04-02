@@ -137,10 +137,12 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="isStop">是否停用</label>
-                            <select class="form-control" name="isStop" id="isStop">
-                                <option value="1">正常</option>
-                                <option value="0">已停用</option>
+                            <label for="isStop">行政级别</label>
+                            <select class="form-control" name="zhiwu" id="zhiwu">
+                                <option value="0">全部</option>
+                                <option value="1">科级</option>
+                                <option value="2">处级</option>
+                                <option value="3">局级</option>
                             </select>
                         </div>
 
@@ -149,6 +151,16 @@
                             <select class="form-control" name="jb" id="jb">
                                 <option value="普通用户">普通用户</option>
                                 <option value="管理员">管理员</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="isStop">是否停用</label>
+                            <select class="form-control" name="isStop" id="isStop">
+                                <option value="1">正常</option>
+                                <option value="0">已停用</option>
                             </select>
                         </div>
                     </div>

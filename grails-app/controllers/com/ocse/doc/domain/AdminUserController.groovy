@@ -29,11 +29,11 @@ class AdminUserController {
                       ,[text]
                       ,[user_code] userCode
                       ,[user_name] userName
-                      ,[jb]
+                      ,[jb],[zhiwu]
                   FROM [DocManage].[dbo].[admin_user] where [id]=${id}""") {
             data ->
                 dataTemp = [id: data.id, isStop: data.isStop, org: data.org, orgName: data.orgName, passWord: data.passWord,
-                        pxh: data.pxh, text: data.text, userCode: data.userCode, userName: data.userName, jb: data.jb]
+                        pxh: data.pxh, text: data.text, userCode: data.userCode, userName: data.userName, jb: data.jb,zhiwu:data.zhiwu]
         }
         render dataTemp as JSON
     }

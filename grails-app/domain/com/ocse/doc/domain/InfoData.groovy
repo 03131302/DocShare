@@ -20,9 +20,18 @@ class InfoData {
     String shareType
     String reType
     int state
+    int zhiwu
 
     String getReType() {
         return reType
+    }
+
+    int getZhiwu() {
+        return zhiwu
+    }
+
+    void setZhiwu(int zhiwu) {
+        this.zhiwu = zhiwu
     }
 
     int getState() {
@@ -98,6 +107,7 @@ class InfoData {
                 ", shareType='" + shareType + '\'' +
                 ", reType='" + reType + '\'' +
                 ", state=" + state +
+                ", zhiwu=" + zhiwu +
                 ", version=" + version +
                 '}';
     }
