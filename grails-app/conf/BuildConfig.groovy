@@ -7,10 +7,10 @@ grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 
 grails.project.fork = [
-    test: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, daemon:true],
-    run: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, forkReserve:false],
-    war: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, forkReserve:false],
-    console: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256]
+        test   : [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, daemon: true],
+        run    : [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, forkReserve: false],
+        war    : [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256, forkReserve: false],
+        console: [maxMemory: 768, minMemory: 64, debug: false, maxPerm: 256]
 ]
 
 grails.project.dependency.resolver = "maven" // or ivy
@@ -19,11 +19,10 @@ grails.project.dependency.resolution = {
     }
     log "info" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
-    legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
+    legacyResolve false
+    // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
 
     repositories {
-        inherits true // Whether to inherit repository definitions from plugins
-
         mavenRepo "http://218.29.222.110:8090/nexus/content/groups/public/"
         mavenLocal()
     }
@@ -35,14 +34,14 @@ grails.project.dependency.resolution = {
     plugins {
         build ":tomcat:7.0.52.1"
 
-        compile ":scaffolding:2.0.2"
-        compile ':cache:1.1.1'
+        compile ":scaffolding:2.0.3"
+        compile ':cache:1.1.2'
 
-        runtime ":hibernate4:4.3.4"
+        runtime ":hibernate4:4.3.5.1"
         compile ":jcaptcha:1.2.1"
         compile ":excel-export:0.1.10"
-        runtime ":database-migration:1.3.8"
+        runtime ":database-migration:1.4.0"
         runtime ":jquery:1.11.0.2"
-        runtime ":resources:1.2.1"
+        runtime ":resources:1.2.7"
     }
 }
