@@ -7,7 +7,7 @@
     <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
     <link rel="stylesheet" href="${resource(dir: 'css/zTreeStyle', file: 'zTreeStyle.css')}" type="text/css">
     <link rel="stylesheet" href="${resource(dir: 'js/uploadify', file: 'uploadify.css')}" type="text/css">
-    <link rel="stylesheet" href="${resource(dir: 'css', file: 'bootstrap.min.css')}" type="text/css">
+    <link rel="stylesheet" href="${resource(dir: 'css/bootstrap/css', file: 'bootstrap.min.css')}" type="text/css">
     <link rel="stylesheet" href="${resource(dir: 'css', file: 'main.css')}" type="text/css">
     <g:layoutHead/>
     <g:javascript library="application"/>
@@ -78,7 +78,7 @@
 
 <div class="modal fade" data-backdrop="" id="infoNewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
      aria-hidden="true">
-    <div class="modal-dialog" style="width: 920px;">
+    <div class="modal-dialog" style="width: 940px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
@@ -144,14 +144,17 @@
                             <input type="text" readonly class="form-control" onclick="selectUser()"
                                    id="userScope" name="userScope" required value="全部" style="cursor: pointer;">
                         </div>
-                        <label for="zhiwu" class="col-md-1 control-label">级别</label>
+                        <label for="zhiwu" class="col-md-1 control-label">访问</label>
 
                         <div class="col-md-5" style="padding-right: 28px;">
                             <select class="form-control" name="zhiwu" id="zhiwu">
-                                <option value="0">全部</option>
-                                <option value="1">科级</option>
-                                <option value="2">处级</option>
-                                <option value="3">局级</option>
+                                <option value="0">全部(不包括访客)</option>
+                                <option value="6">1</option><!--局长-->
+                                <option value="5">2</option><!--分管副局长-->
+                                <option value="4">3</option><!--科室负责人-->
+                                <option value="3">4</option><!--科室工作人员-->
+                                <option value="2">5</option><!--全局工作人员-->
+                                <option value="-1">6(访客)</option><!--访客-->
                             </select>
                         </div>
                     </div>
@@ -387,7 +390,7 @@
 <script type="text/javascript" src="${resource(dir: "js", file: "jquery.ztree.all-3.5.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: "js/uploadify", file: "jquery.uploadify.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: "js/ckeditor", file: "ckeditor.js")}"></script>
-<script type="text/javascript" src="${resource(dir: "js", file: "bootstrap.min.js")}"></script>
+<script type="text/javascript" src="${resource(dir: "css/bootstrap/js", file: "bootstrap.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: 'js', file: 'jquery.form.min.js')}"></script>
 <script type="text/javascript" src="${resource(dir: 'js/My97DatePicker', file: 'WdatePicker.js')}"></script>
 <script type="text/javascript">

@@ -17,9 +17,11 @@
                     <div class="navbar-header">
                         <a class="navbar-brand" href="javascript:void(0);">用户信息管理</a>
                     </div>
-                    <g:form controller="manage" action="userManageIndex" name="userNameLike" class="navbar-form navbar-left" role="search" method="get">
+                    <g:form controller="manage" action="userManageIndex" name="userNameLike"
+                            class="navbar-form navbar-left" role="search" method="get">
                         <div class="form-group">
-                            <input id="userNameLike" name="userNameLike" type="text" class="form-control" value="${userNameLike}"
+                            <input id="userNameLike" name="userNameLike" type="text" class="form-control"
+                                   value="${userNameLike}"
                                    placeholder="姓名">
                         </div>
                         <button type="submit" class="btn btn-default">
@@ -44,6 +46,7 @@
                         <th>所在机构</th>
                         <th>是否停用</th>
                         <th>级别</th>
+                        <th>访问级别</th>
                         <th>排序号</th>
                         <th>备注</th>
                     </tr>
@@ -51,14 +54,16 @@
                     <tbody>
                     <g:each in="${users}" var="user" status="n">
                         <tr>
-                            <td style="text-align: center;"><input id="${user.id}" class="dataOracle" name="${user.id}" type="checkbox"
-                                       value="${user.id}"></td>
+                            <td style="text-align: center;"><input id="${user.id}" class="dataOracle" name="${user.id}"
+                                                                   type="checkbox"
+                                                                   value="${user.id}"></td>
                             <td>${n + 1}</td>
                             <td>${user.userName}</td>
                             <td>${user.userCode}</td>
                             <td>${user.org.name}</td>
                             <td>${user.isStop ? "正常" : "已停用"}</td>
                             <td>${user.jb}</td>
+                            <td>${user.zhiwu == 0 ? "全部(不包含访客)" : (7 - user.zhiwu.abs())}</td>
                             <td>${user.pxh}</td>
                             <td>${user.text}</td>
                         </tr>
@@ -77,7 +82,8 @@
     </div>
 </div>
 
-<div class="modal fade" data-backdrop="" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" data-backdrop="" id="userModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -137,12 +143,15 @@
 
                     <div class="row">
                         <div class="col-md-6">
-                            <label for="isStop">行政级别</label>
+                            <label for="isStop">访问级别</label>
                             <select class="form-control" name="zhiwu" id="zhiwu">
-                                <option value="0">全部</option>
-                                <option value="1">科级</option>
-                                <option value="2">处级</option>
-                                <option value="3">局级</option>
+                                <option value="0">全部(不包括访客)</option>
+                                <option value="6">1</option><!--局长-->
+                                <option value="5">2</option><!--分管副局长-->
+                                <option value="4">3</option><!--科室负责人-->
+                                <option value="3">4</option><!--科室工作人员-->
+                                <option value="2">5</option><!--全局工作人员-->
+                                <option value="-1">6(访客)</option><!--访客-->
                             </select>
                         </div>
 
@@ -184,7 +193,8 @@
     </div>
 </div>
 
-<div class="modal fade" id="orgModal" data-backdrop="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="orgModal" data-backdrop="" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

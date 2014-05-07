@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>东营市环保局工作信息共享平台</title>
     <link rel="shortcut icon" href="${resource(dir: 'images', file: 'favicon.ico')}" type="image/x-icon">
-    <link rel="stylesheet" href="${resource(dir: 'css', file: 'bootstrap.min.css')}" type="text/css">
+    <link rel="stylesheet" href="${resource(dir: 'css/bootstrap/css', file: 'bootstrap.min.css')}" type="text/css">
     <link rel="stylesheet" href="${resource(dir: 'css', file: 'login.css')}" type="text/css">
 </head>
 
@@ -92,7 +92,7 @@
 </div>
 
 <script type="text/javascript" src="${resource(dir: 'js', file: 'jquery-1.10.2.min.js')}"></script>
-<script type="text/javascript" src="${resource(dir: "js", file: "bootstrap.min.js")}"></script>
+<script type="text/javascript" src="${resource(dir: "css/bootstrap/js", file: "bootstrap.min.js")}"></script>
 <script type="text/javascript" src="${resource(dir: 'js', file: 'jquery.form.min.js')}"></script>
 <!--[if lt IE 9]>
 	<script  type="text/javascript" src="${resource(dir: 'js', file: 'html5shiv.js')}"></script>
